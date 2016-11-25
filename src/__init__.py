@@ -31,7 +31,7 @@ def run_pipeline(dataset_path, dataset_type, classifier_type):
 
         test_sample_count = len(author_tweets) - train_sample_count
         if test_sample_count > 0:
-            test_tweets += author_tweets[test_sample_count:]
+            test_tweets += author_tweets[train_sample_count:]
 
     # Extract features from train and test dataset
     train_features = [extract_features(tweet) for tweet in train_tweets]

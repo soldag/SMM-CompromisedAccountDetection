@@ -9,15 +9,19 @@ from .training import train_classifier
 from .evaluation import evaluate
 
 
-def run_pipeline(dataset_path, dataset_type, classifier_type):
+def prepare_data(dataset_path, dataset_type):
     # Parse dataset
-    tweets = parse_dataset(dataset_path, dataset_type)
+    resources = parse_dataset(dataset_path, dataset_type)
 
     # TODO For testing limit tweets to 100 most active authors
-    tweet_counts_per_author = {k: len(list(g)) for k, g in itertools.groupby(tweets, lambda x: x.author)}
-    top_authors = dict(sorted(tweet_counts_per_author.items(), key=operator.itemgetter(1), reverse=True)[:100]).keys()
-    tweets = [tweet for tweet in tweets if tweet.author in top_authors]
+    resources_counts_per_author = {k: len(list(g)) for k, g in itertools.groupby(resources, lambda x: x.author)}
+    top_authors = dict(sorted(resources_counts_per_author.items(), key=operator.itemgetter(1), reverse=True)[:100]).keys()
+    resources = [resource for resource in resources if resource.author in top_authors]
 
+    return resources
+
+
+def run_pipeline(tweets, classifier_type):
     # Split dataset into testing and training set (per author)
     train_tweets = []
     test_tweets = []

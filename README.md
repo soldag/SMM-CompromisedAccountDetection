@@ -18,5 +18,5 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 
 #### Options
 - ```-p / --dataset-path FILE_PATH``` The path of the CSV dataset, which contains the posts. 
-- ```-t / --dataset-type DATASET_TYPE``` The type of the specified dataset. (currently only ```fth```)
+- ```-t / --dataset-type DATASET_TYPE``` The type of the specified dataset. (currently you can use ```fth``` or ``mp``)
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. (currently only ```decision_tree```)

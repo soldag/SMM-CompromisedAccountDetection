@@ -1,8 +1,10 @@
 from .fth_parser import parse_dataset as parse_fth
+from .mp_parser import parse_dataset as parse_mp
 
 
 type_parser_mapping = {
-    'fth': parse_fth
+    'fth': parse_fth,
+    'mp': parse_mp
 }
 
 

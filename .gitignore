@@ -92,3 +92,7 @@ ENV/
 
 # IDEA
 .idea
+
+# Excel files
+*.xls
+*.xlsx

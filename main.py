@@ -6,25 +6,34 @@ from src.evaluation import writeToXlsx
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="This application analyzes social media posts in order to determine, whether an account was compromised or not.")
-    parser.add_argument('--dataset-path', '-p', help='The path of the dataset, which contains the posts.')
-    parser.add_argument('--dataset-type', '-t', help='The type of the specified dataset.')
-    parser.add_argument('--classifier-type', '-c', help='The type of the classifier to be trained.')
+    parser = argparse.ArgumentParser(description="This application analyzes social media status updates in order to determine, whether an account was compromised or not.")
+    parser.add_argument("--provider-type", "-t", help="The type of the specified data provider.")
+    parser.add_argument("--classifier-type", "-c", help="The type of the classifier to be trained.")
+    parser.add_argument("--experiments-count", "-n", default=10, help="The number of experiments to run.")
+    parser.add_argument("--dataset-path", "-p", default=None, help="The path of the dataset, which contains the status_updates. (only required, if 'fth' or 'mp 'is used as data provider)")
+    parser.add_argument("--twitter-user", "-u", default=None, help="The id of the twitter user, whose status updates should be analyzed. (only required, if 'twitter' is used as data provider)")
     args = parser.parse_args()
 
-    excel_data = []
-    experiment_count = 11
-    resources = prepare_data(args.dataset_path, args.dataset_type)
+    # Get status updates and prepare data
+    print("Retrieve and prepare data...")
+    provider_parameter = {}
+    if args.dataset_path is not None:
+        provider_parameter["dataset_path"] = args.dataset_path
+    if args.twitter_user is not None:
+        provider_parameter["user_id"] = args.dataset_path
+    status_updates = prepare_data(args.provider_type, **provider_parameter)
 
-    for i in range(1, experiment_count):
-        tp, tn, fp, fn = run_pipeline(resources, args.classifier_type)
+    # Run specified number of experiments
+    evaluation_data = []
+    experiments_count = args.experiments_count
+    for i in range(1, experiments_count):
+        tp, tn, fp, fn = run_pipeline(status_updates, args.classifier_type)
+        evaluation_data.append([i, tp, tn, fp, fn, (tp + tn) / (tp + tn + fp + fn), tp / (tp + fp), tp / (tp + fn)])
 
-        print("Evaluation results:")
+        print("Evaluation results for experiment %i/%i" % (i + 1, experiments_count))
         print("True positives: " + str(tp))
         print("True negatives: " + str(tn))
         print("False positives: " + str(fp))
         print("False negatives: " + str(fn))
 
-        excel_data.append([i, tp, tn, fp, fn, (tp + tn)/(tp + tn + fp + fn), tp/(tp + fp), tp/(tp + fn)])
-
-    writeToXlsx(excel_data, experiment_count)
+    writeToXlsx(evaluation_data, experiments_count)

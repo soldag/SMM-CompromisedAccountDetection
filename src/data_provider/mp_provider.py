@@ -1,28 +1,31 @@
 import csv
+import uuid
 from datetime import datetime
 
-from .post import Post
+from .status_update import StatusUpdate
 
 DELIMITER = ','
 DATE_FORMAT = '%m/%d/%y %I:%M %p'
 
 
-def parse_dataset(path):
-    with open(path, 'r', encoding='latin-1') as file:
+def get_status_updates(dataset_path):
+    with open(dataset_path, 'r', encoding='latin-1') as file:
         reader = csv.DictReader(file, delimiter=DELIMITER)
-        posts = [parse_row(row) for row in reader]
+        status_updates = [parse_row(row) for row in reader]
 
-        return posts
+        return status_updates
 
 
 def parse_row(row):
+    id = str(uuid.uuid4())
     author = row['#AUTHID']
     content = row['STATUS']
     date_time = parse_date(row['DATE'])
 
-    return Post(author, content, date_time)
+    return StatusUpdate(id, author, content, date_time)
 
-def parse_date(value, default=datetime.strptime('01/01/01 01:01 AM', DATE_FORMAT)):
+
+def parse_date(value, default=None):
     try:
         return datetime.strptime(value, DATE_FORMAT)
     except ValueError:

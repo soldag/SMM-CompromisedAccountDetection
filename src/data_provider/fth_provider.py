@@ -1,18 +1,18 @@
 import csv
 from datetime import datetime
 
-from .tweet import Tweet
+from .status_update import StatusUpdate
 
 DELIMITER = ';'
 DATE_FORMAT = '%Y-%m-%d%H:%M'
 
 
-def parse_dataset(path):
-    with open(path, 'r', encoding='latin-1') as file:
+def get_status_updates(dataset_path):
+    with open(dataset_path, 'r', encoding='latin-1') as file:
         reader = csv.DictReader(file, delimiter=DELIMITER)
-        posts = [parse_row(row) for row in reader]
+        status_updates = [parse_row(row) for row in reader]
 
-        return posts
+        return status_updates
 
 
 def parse_row(row):
@@ -27,8 +27,8 @@ def parse_row(row):
     number_of_retweets = parse_int(row['RTs'])
     number_of_favorites = parse_int(row['Favs'])
 
-    return Tweet(id, author, content, date_time, language, country,
-                 latitude, longitude, number_of_retweets, number_of_favorites)
+    return StatusUpdate(id, author, content, date_time, language, country,
+                        latitude, longitude, number_of_retweets, number_of_favorites)
 
 
 def parse_int(value, default=0):

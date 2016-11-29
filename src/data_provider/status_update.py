@@ -1,6 +1,6 @@
-class Tweet:
-    def __init__(self, id, author, content, date_time, language, country,
-                 latitude, longitude, number_of_retweets, number_of_favorites):
+class StatusUpdate:
+    def __init__(self, id, author, content, date_time=None, language=None, country=None,
+                 latitude=None, longitude=None, number_of_shares=None, number_of_likes=None):
         self._id = id
         self._author = author
         self._content = content
@@ -9,8 +9,8 @@ class Tweet:
         self._country = country
         self._latitude = latitude
         self._longitude = longitude
-        self._number_of_retweets = number_of_retweets
-        self._number_of_favorites = number_of_favorites
+        self._number_of_shares = number_of_shares
+        self._number_of_likes = number_of_likes
 
     @property
     def id(self):
@@ -45,9 +45,9 @@ class Tweet:
         return self._longitude
 
     @property
-    def number_of_retweets(self):
-        return self._number_of_retweets
+    def number_of_shares(self):
+        return self._number_of_shares
 
     @property
-    def number_of_favorites(self):
-        return self._number_of_favorites
+    def number_of_likes(self):
+        return self._number_of_likes

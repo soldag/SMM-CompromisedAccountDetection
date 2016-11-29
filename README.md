@@ -22,7 +22,7 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. (currently only ```decision_tree```)
 
 ##### Data provider dependent arguments
-###### Dataset provider (```fth``` or ```mp``)
+###### File-based data providers (```fth``` or ```mp```)
 - ```--dataset-path FILE_PATH``` The path of the CSV dataset, which contains the status updates. 
 
 ###### Twitter provider

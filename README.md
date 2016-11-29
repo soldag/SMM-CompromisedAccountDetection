@@ -33,4 +33,6 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 - ```-n / --experiments-count NUMBER_OF_EXPERIMENTS``` The number of experiments to run. (default: 10)
 
 ### Web App
-```./run_app_dev.sh```
+```
+./run_app_dev.sh
+```

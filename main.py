@@ -10,8 +10,8 @@ if __name__ == "__main__":
     parser.add_argument("--provider-type", "-t", help="The type of the specified data provider.")
     parser.add_argument("--classifier-type", "-c", help="The type of the classifier to be trained.")
     parser.add_argument("--experiments-count", "-n", default=10, help="The number of experiments to run.")
-    parser.add_argument("--dataset-path", "-p", default=None, help="The path of the dataset, which contains the status_updates. (only required, if 'fth' or 'mp 'is used as data provider)")
-    parser.add_argument("--twitter-user", "-u", default=None, help="The id of the twitter user, whose status updates should be analyzed. (only required, if 'twitter' is used as data provider)")
+    parser.add_argument("--dataset-path", default=None, help="The path of the dataset, which contains the status_updates. (only required, if 'fth' or 'mp 'is used as data provider)")
+    parser.add_argument("--twitter-user", default=None, help="The id of the twitter user, whose status updates should be analyzed. (only required, if 'twitter' is used as data provider)")
     args = parser.parse_args()
 
     # Get status updates and prepare data

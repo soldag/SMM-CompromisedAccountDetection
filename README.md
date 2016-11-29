@@ -25,5 +25,5 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 ###### File-based data providers (```fth``` or ```mp```)
 - ```--dataset-path FILE_PATH``` The path of the CSV dataset, which contains the status updates. 
 
-###### Twitter provider
+###### Twitter provider (```twitter```)
 - ```--twitter-user TWITTER_USER_ID``` The id of the twitter user, whose status updates should be analyzed.

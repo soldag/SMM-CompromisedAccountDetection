@@ -1,8 +1,8 @@
 import argparse
 
-from src import prepare_data
-from src import run_pipeline
-from src.evaluation import writeToXlsx
+from core import prepare_data
+from core import run_pipeline
+from core.evaluation import writeToXlsx
 
 
 if __name__ == "__main__":

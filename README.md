@@ -14,7 +14,8 @@ The application additionally needs the following NLTK data packages:
 For installation instructions please visit [http://www.nltk.org/data.html](http://www.nltk.org/data.html).
 
 ## Usage
-```python main.py [options]```
+### Command Line Interface
+```python cli.py [options]```
 
 #### Options
 ##### Required arguments
@@ -27,3 +28,9 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 
 ###### Twitter provider (```twitter```)
 - ```--twitter-user TWITTER_USER_ID``` The id of the twitter user, whose status updates should be analyzed.
+
+###### Optional arguments
+- ```-n / --experiments-count NUMBER_OF_EXPERIMENTS``` The number of experiments to run. (default: 10)
+
+### Web App
+```./run_app_dev.sh```

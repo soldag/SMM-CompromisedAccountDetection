@@ -93,6 +93,7 @@ ENV/
 
 # IDEA
 .idea
+*.iml
 
 # Excel files
 *.xls

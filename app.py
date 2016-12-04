@@ -1,9 +1,22 @@
 from flask import Flask
+from flask import request
 from flask import render_template
+
+from core import prepare_data
+from core import run_pipeline
+
+import urllib.parse as url_parser
 
 app = Flask(__name__)
 
 
-@app.route('/check/')
+@app.route('/check/', methods=['GET', 'POST'])
 def check():
-    return render_template('check.html')
+    if request.method == 'POST':
+        url = request.form.get('account_url', 'hpi_de')
+        parsed_url = url_parser.urlparse(url)
+        user_id = url_parser.parse_qs(parsed_url.query)
+        status_updates = prepare_data('twitter', user_id=user_id)
+        return run_pipeline(status_updates, 'decision_tree')
+    else:
+        return render_template('check.html')

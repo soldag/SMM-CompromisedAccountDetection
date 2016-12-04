@@ -4,14 +4,14 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-    <h1>Check if your account was compromised:</h1>
+    <h1>Check if your account was compromised</h1>
     <p>
       Please insert your Twitter Account URL below.
     </p>
-    <form action="">
-        Account URL:<br>
-        <input type="url" name="account_url" value="http://twitter.de/example" size="30"><br><br>
-        <input type="submit" value="Submit">
-        <input type="reset">
+    <form method="post">
+        Account URL:<br />
+        <input type="url" name="account_url" value="https://twitter.com/example_account" size="50" /><br /><br />
+        <input type="submit" value="Submit" />
+        <input type="reset" />
     </form>
 {% endblock %}

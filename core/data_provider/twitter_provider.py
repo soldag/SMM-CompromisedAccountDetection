@@ -11,7 +11,7 @@ def get_status_updates(user_id):
     auth.set_access_token(credentials['access_token_key'], credentials['access_token_secret'])
     api = tweepy.API(auth)
 
-    tweets = api.user_timeline(user_id, count = 200)
+    tweets = api.user_timeline(user_id, count=200)
     for tweet in tweets:
         status_updates = [parse_tweet(tweet) for tweet in tweets]
     return status_updates

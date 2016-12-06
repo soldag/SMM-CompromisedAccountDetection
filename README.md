@@ -18,19 +18,31 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 ```python cli.py [options]```
 
 #### Options
-##### Required arguments
-- ```-t / --provider-type DATA_PROVIDER_TYPE``` The type of the specified data provider, which supplies the status updates.
+##### General arguments
+- ```-a / --action ACTION``` The action that should be performed. Possible values are `crawl` and `analyze`
+- ```-t / --data-source-type DATA_SOURCE_TYPE``` The type of the specified data source, which contains the status updates.
+
+##### Crawling status updates
+- ```-p / --dataset-path FILE_PATH``` The path of the output dataset, that should contain the crawled status updates. 
+- ```--user-limit LIMIT``` The maximum number of accounts to crawl. (default: 100)
+
+##### Analyzing status updates
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. (currently only ```decision_tree```)
-
-##### Data provider dependent arguments
-###### File-based data providers (```fth``` or ```mp```)
-- ```--dataset-path FILE_PATH``` The path of the CSV dataset, which contains the status updates. 
-
-###### Twitter provider (```twitter```)
-- ```--twitter-user TWITTER_USER_ID``` The id of the twitter user, whose status updates should be analyzed.
-
-###### Optional arguments
+- ```-p / --dataset-path FILE_PATH``` The path of the dataset, which contains the status updates. 
+- ```-u / --twitter-user TWITTER_USER_ID``` The id of the twitter user, whose status updates should be analyzed.
 - ```-n / --experiments-count NUMBER_OF_EXPERIMENTS``` The number of experiments to run. (default: 10)
+
+#### Examples
+```
+# Crawl 50 most popular users
+python cli.py -a crawl -t twitter -p output.csv --user-limit 50
+
+# Analyze 'Follow the Hashtag' dataset using an decision tree
+python cli.py -a analyze -t fth -p fth.csv -c decision_tree
+
+# Analyze twitter user @katyperry using an decision tree with 150 experiments
+python cli.py -a analyze -t twitter -u katyperry -c decision_tree -n 150
+```
 
 ### Web App
 ```

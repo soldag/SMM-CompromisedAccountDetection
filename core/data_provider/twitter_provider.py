@@ -11,15 +11,8 @@ def get_status_updates(user_id):
     auth.set_access_token(credentials['access_token_key'], credentials['access_token_secret'])
     api = tweepy.API(auth)
 
-    status_updates = []
-    length = 1
-    max_id = None
-    while length > 0:
-        new_tweets = api.user_timeline(user_id, count=200, max_id = max_id)
-        length = len(new_tweets)
-        if length > 0:
-            max_id = new_tweets[-1].id - 1
-            status_updates += [parse_tweet(tweet) for tweet in new_tweets]
+    tweets = tweepy.Cursor(api.user_timeline, id=user_id).items()
+    status_updates = [parse_tweet(tweet) for tweet in tweets]
     return status_updates
 
 

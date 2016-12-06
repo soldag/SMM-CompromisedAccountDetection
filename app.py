@@ -15,7 +15,7 @@ def check():
     if request.method == 'POST':
         url = request.form.get('account_url', 'hpi_de')
         parsed_url = url_parser.urlparse(url)
-        user_id = url_parser.parse_qs(parsed_url.query)
+        user_id = parsed_url.path.split('/')[1]
         status_updates = prepare_data('twitter', user_id=user_id)
         tp, tn, fp, fn = run_pipeline(status_updates, 'decision_tree')
         return 'tp: ' + str(tp) + ', tn: ' + str(tn) + ', fp: ' + str(fp) + ', tn: ' + str(tn)

@@ -19,7 +19,9 @@ class WritingStyleFeatures:
                                      + self.char_frequencies(string.ascii_lowercase)\
                                      + self.char_frequencies(self.special_characters)
         lexical_word_features = [self.number_of_words(),
-                                 self.number_of_short_words()]
+                                 self.number_of_short_words(),
+                                 self.avg_word_length(),
+                                 self.number_of_unique_word()]
         lexical_features = lexical_character_features + lexical_word_features
 
         return lexical_features

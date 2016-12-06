@@ -98,3 +98,6 @@ ENV/
 # Excel files
 *.xls
 *.xlsx
+
+# Datasets
+data

@@ -20,7 +20,7 @@ if __name__ == "__main__":
     if args.dataset_path is not None:
         provider_parameter["dataset_path"] = args.dataset_path
     if args.twitter_user is not None:
-        provider_parameter["user_id"] = args.dataset_path
+        provider_parameter["user_id"] = args.twitter_user
     status_updates = prepare_data(args.provider_type, **provider_parameter)
 
     # Run specified number of experiments

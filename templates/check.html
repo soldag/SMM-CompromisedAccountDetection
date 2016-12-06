@@ -4,14 +4,15 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-    <h1>Check if your account was compromised</h1>
-    <p>
-      Please insert your Twitter Account URL below.
-    </p>
+    <h1 class="text-center">Check if your account was compromised</h1>
     <form method="post">
-        <label for="account_url">Account URL:</label><br />
-        <input type="url" name="account_url" id="account_url" value="https://twitter.com/hpi_de?lang=de" size="50" /><br /><br />
-        <input type="submit" value="Submit" />
-        <input type="reset" />
+      <div class="col-md-12 text-center input--url">
+        <label for="account_url" class="col-md-12">Account URL:</label>
+        <input type="url" name="account_url" id="account_url" value="https://twitter.com/hpi_de" size="50" class="transparent col-md-12 text-center" />
+      </div>
+      <div class="col-md-12 text-center">
+        <button type="submit" value="Submit" class="font--black">Submit</button>
+        <button type="reset" value="Reset" class="font--black">Reset</button>
+      </div>
     </form>
 {% endblock %}

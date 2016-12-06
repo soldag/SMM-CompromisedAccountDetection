@@ -68,4 +68,4 @@ if __name__ == "__main__":
         analyze(args.data_source_type, args.classifier_type,
                 args.experiments_count, args.dataset_path, args.twitter_user)
     else:
-        print("Invalid mode!")
+        print("Invalid action!")

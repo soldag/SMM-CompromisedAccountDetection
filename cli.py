@@ -25,8 +25,8 @@ if __name__ == "__main__":
 
     # Run specified number of experiments
     evaluation_data = []
-    experiments_count = args.experiments_count
-    for i in range(1, experiments_count):
+    experiments_count = int(args.experiments_count)
+    for i in range(0, experiments_count):
         tp, tn, fp, fn = run_pipeline(status_updates, args.classifier_type)
         evaluation_data.append([i, tp, tn, fp, fn, (tp + tn) / (tp + tn + fp + fn), tp / (tp + fp), tp / (tp + fn)])
 

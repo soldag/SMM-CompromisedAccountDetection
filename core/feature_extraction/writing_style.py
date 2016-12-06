@@ -1,6 +1,6 @@
 import string
 import numpy as np
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import word_tokenize, sent_tokenize
 
 
 class WritingStyleFeatures:
@@ -21,8 +21,11 @@ class WritingStyleFeatures:
         lexical_word_features = [self.number_of_words(),
                                  self.number_of_short_words(),
                                  self.avg_word_length(),
+                                 self.avg_sentence_length_chars(),
+                                 self.avg_sentence_length_words(),
                                  self.number_of_unique_word()]
-        lexical_features = lexical_character_features + lexical_word_features
+        structural_features = [self.number_of_sentences()]
+        lexical_features = lexical_character_features + lexical_word_features + structural_features
 
         return lexical_features
 
@@ -46,3 +49,12 @@ class WritingStyleFeatures:
 
     def number_of_unique_word(self):
         return len(set(word_tokenize(self.text)))
+
+    def number_of_sentences(self):
+        return len(sent_tokenize(self.text, language='english'))
+
+    def avg_sentence_length_chars(self):
+        return np.mean([len(s) for s in sent_tokenize(self.text, language='english')])
+
+    def avg_sentence_length_words(self):
+        return np.mean([len(word_tokenize(s)) for s in sent_tokenize(self.text, language='english')])

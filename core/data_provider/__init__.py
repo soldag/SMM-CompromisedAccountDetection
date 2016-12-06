@@ -1,19 +1,19 @@
-from .fth_provider import get_status_updates as get_fth
-from .mp_provider import get_status_updates as get_mp
-from .twitter_provider import get_status_updates as get_twitter
+from .fth_provider import FthProvider
+from .mp_provider import MpProvider
+from .twitter_provider import TwitterProvider
 
 
 type_provider_mapping = {
-    'fth': get_fth,
-    'mp': get_mp,
-    'twitter': get_twitter
+    'fth': FthProvider,
+    'mp': MpProvider,
+    'twitter': TwitterProvider
 }
 
 
-def get_status_updates(provider_type, **kwargs):
-    if provider_type not in type_provider_mapping:
-        raise ValueError('Invalid provider_type!')
+def get_status_updates(data_source_type, **kwargs):
+    if data_source_type not in type_provider_mapping:
+        raise ValueError('Invalid data_source_type!')
 
-    parsing_callable = type_provider_mapping[provider_type]
-    return parsing_callable(**kwargs)
+    provider = type_provider_mapping[data_source_type]()
+    return provider.get_status_updates(**kwargs)
 

@@ -4,29 +4,26 @@ from datetime import datetime
 
 from .status_update import StatusUpdate
 
-DELIMITER = ','
-DATE_FORMAT = '%m/%d/%y %I:%M %p'
 
+class MpProvider:
+    DELIMITER = ','
+    DATE_FORMAT = '%m/%d/%y %I:%M %p'
 
-def get_status_updates(dataset_path):
-    with open(dataset_path, 'r', encoding='latin-1') as file:
-        reader = csv.DictReader(file, delimiter=DELIMITER)
-        status_updates = [parse_row(row) for row in reader]
+    def get_status_updates(self, dataset_path):
+        with open(dataset_path, 'r', encoding='latin-1') as file:
+            reader = csv.DictReader(file, delimiter=self.DELIMITER)
+            status_updates = [self._parse_row(row) for row in reader]
 
-        return status_updates
+            return status_updates
 
+    def _parse_row(self, row):
+        return StatusUpdate(id=str(uuid.uuid4()),
+                            author=row['#AUTHID'],
+                            content=row['STATUS'],
+                            date_time=self._parse_date(row['DATE']))
 
-def parse_row(row):
-    id = str(uuid.uuid4())
-    author = row['#AUTHID']
-    content = row['STATUS']
-    date_time = parse_date(row['DATE'])
-
-    return StatusUpdate(id, author, content, date_time)
-
-
-def parse_date(value, default=None):
-    try:
-        return datetime.strptime(value, DATE_FORMAT)
-    except ValueError:
-        return default
+    def _parse_date(self, value, default=None):
+        try:
+            return datetime.strptime(value, self.DATE_FORMAT)
+        except ValueError:
+            return default

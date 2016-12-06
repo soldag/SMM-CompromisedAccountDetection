@@ -2,6 +2,13 @@ body {
   background-color: #333 !important;
   color: lightgrey !important;
   font-size: 20px !important;
+  font-family: -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
 }
 .transparent {
   border: none;
@@ -10,13 +17,7 @@ body {
 .transparent:focus{
   outline: none;
 }
-.font--black {
-  color: black;
-}
 .input--url {
   margin-top: 13rem;
   margin-bottom: 4rem;
-}
-button {
-  font-size: 16px !important;
 }

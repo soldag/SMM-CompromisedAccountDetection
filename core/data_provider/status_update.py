@@ -57,7 +57,7 @@ class StatusUpdate:
             "id": self.id,
             "author": self.author,
             "content": self.content,
-            "data_time": self.date_time,
+            "date_time": self.date_time,
             "language": self.language,
             "country": self.country,
             "latitude": self.latitude,
@@ -68,13 +68,13 @@ class StatusUpdate:
 
     @classmethod
     def from_dict(cls, obj):
-        return StatusUpdate(id=obj.id,
-                            author=obj.author,
-                            content=obj.content,
-                            date_time=obj.date_time,
-                            language=obj.language,
-                            country=obj.country,
-                            latitude=obj.latitude,
-                            longitude=obj.longitude,
-                            number_of_shares=obj.number_of_shares,
-                            number_of_likes=obj.number_of_likes)
+        return StatusUpdate(id=obj["id"],
+                            author=obj["author"],
+                            content=obj["content"],
+                            date_time=obj["date_time"],
+                            language=obj["language"],
+                            country=obj["country"],
+                            latitude=obj["latitude"],
+                            longitude=obj["longitude"],
+                            number_of_shares=obj["number_of_shares"],
+                            number_of_likes=obj["number_of_likes"])

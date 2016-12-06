@@ -21,6 +21,7 @@ def analyze(data_source_type, classifier_type, experiments_count,
     status_updates = prepare_data(data_source_type, **provider_parameter)
 
     # Run specified number of experiments
+    print("Run experiments...")
     evaluation_data = []
     for i in range(0, experiments_count):
         tp, tn, fp, fn = run_pipeline(status_updates, classifier_type)

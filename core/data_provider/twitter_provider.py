@@ -1,3 +1,4 @@
+import csv
 import json
 import tweepy
 from .status_update import StatusUpdate
@@ -9,16 +10,27 @@ class TwitterProvider:
     def __init__(self):
         self.client = self._get_twitter_client()
 
-    def get_status_updates(self, user_id):
-        credentials_file = open('twitter_credentials.json').read()
-        credentials = json.loads(credentials_file)['credentials']
+    def get_status_updates(self, user_id=None, dataset_path=None):
+        if user_id:
+            return self._get_api_status_updates(user_id)
+        if dataset_path:
+            return self._get_dataset_status_updates(dataset_path)
 
-        auth = tweepy.AppAuthHandler(credentials['consumer_key'],
-                                     credentials['consumer_secret'])
-        api = tweepy.API(auth)
+        raise ValueError('Either user_id or dataset_path has to be provided')
 
-        tweets = tweepy.Cursor(api.user_timeline, id=user_id).items()
+    def _get_api_status_updates(self, user_id):
+        client = self._get_twitter_client()
+        tweets = tweepy.Cursor(client.user_timeline, id=user_id).items()
         status_updates = [self._parse_tweet(tweet) for tweet in tweets]
+
+        return status_updates
+
+    def _get_dataset_status_updates(self, dataset_path):
+        status_updates = []
+        with open(dataset_path, 'r') as dataset_file:
+            csv_reader = csv.DictReader(dataset_file)
+            for row in csv_reader:
+                status_updates.append(StatusUpdate.from_dict(row))
 
         return status_updates
 
@@ -26,10 +38,8 @@ class TwitterProvider:
         with open('twitter_credentials.json') as credentials_file:
             credentials = json.loads(credentials_file.read())['credentials']
 
-            auth = tweepy.OAuthHandler(credentials['consumer_key'],
-                                       credentials['consumer_secret'])
-            auth.set_access_token(credentials['access_token_key'],
-                                  credentials['access_token_secret'])
+            auth = tweepy.AppAuthHandler(credentials['consumer_key'],
+                                         credentials['consumer_secret'])
 
             return tweepy.API(auth)
 

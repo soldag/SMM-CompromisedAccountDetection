@@ -7,8 +7,7 @@ def get_status_updates(user_id):
     credentials_file = open('twitter_credentials.json').read()
     credentials = json.loads(credentials_file)['credentials']
 
-    auth = tweepy.OAuthHandler(credentials['consumer_key'], credentials['consumer_secret'])
-    auth.set_access_token(credentials['access_token_key'], credentials['access_token_secret'])
+    auth = tweepy.AppAuthHandler(credentials['consumer_key'], credentials['consumer_secret'])
     api = tweepy.API(auth)
 
     tweets = tweepy.Cursor(api.user_timeline, id=user_id).items()

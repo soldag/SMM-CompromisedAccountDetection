@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class StatusUpdate:
     def __init__(self, id, author, content, date_time=None, language=None, country=None,
                  latitude=None, longitude=None, number_of_shares=None, number_of_likes=None):
@@ -71,7 +73,7 @@ class StatusUpdate:
         return StatusUpdate(id=obj["id"],
                             author=obj["author"],
                             content=obj["content"],
-                            date_time=obj["date_time"],
+                            date_time=datetime.strptime(obj["date_time"], "%Y-%m-%d %H:%M:%S"),
                             language=obj["language"],
                             country=obj["country"],
                             latitude=obj["latitude"],

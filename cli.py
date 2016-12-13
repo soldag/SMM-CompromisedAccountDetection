@@ -51,6 +51,8 @@ if __name__ == "__main__":
     # Crawl arguments
     parser.add_argument("--user-limit", type=int, default=100,
                         help="The maximum number of accounts to crawl.")
+    parser.add_argument("--limit", type=int, default=0,
+                        help="The maximum number of status updates per user to crawl.")
 
     # Train arguments
     parser.add_argument("--classifier-type", "-c", default=None,
@@ -62,7 +64,7 @@ if __name__ == "__main__":
 
     if args.action == 'crawl':
         crawl_status_updates(args.data_source_type, args.dataset_path,
-                             user_limit=args.user_limit)
+                             user_limit=args.user_limit, limit=args.limit)
     elif args.action == 'analyze':
         analyze(args.data_source_type, args.classifier_type,
                 args.experiments_count, args.dataset_path, args.twitter_user)

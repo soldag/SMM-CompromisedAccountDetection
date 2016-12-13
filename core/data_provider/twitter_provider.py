@@ -27,7 +27,7 @@ class TwitterProvider:
 
     def _get_dataset_status_updates(self, dataset_path):
         status_updates = []
-        with open(dataset_path, 'r') as dataset_file:
+        with open(dataset_path, 'r', encoding='utf8') as dataset_file:
             csv_reader = csv.DictReader(dataset_file)
             for row in csv_reader:
                 status_updates.append(StatusUpdate.from_dict(row))

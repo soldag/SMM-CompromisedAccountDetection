@@ -10,17 +10,18 @@ class TwitterProvider:
     def __init__(self):
         self.client = self._get_twitter_client()
 
-    def get_status_updates(self, user_id=None, dataset_path=None):
+    def get_status_updates(self, user_id=None,
+                           dataset_path=None, tweet_limit=0):
         if user_id:
-            return self._get_api_status_updates(user_id)
+            return self._get_api_status_updates(user_id, tweet_limit)
         if dataset_path:
             return self._get_dataset_status_updates(dataset_path)
 
         raise ValueError('Either user_id or dataset_path has to be provided')
 
-    def _get_api_status_updates(self, user_id):
+    def _get_api_status_updates(self, user_id, limit):
         client = self._get_twitter_client()
-        tweets = tweepy.Cursor(client.user_timeline, id=user_id).items()
+        tweets = tweepy.Cursor(client.user_timeline, id=user_id).items(limit)
         status_updates = [self._parse_tweet(tweet) for tweet in tweets]
 
         return status_updates

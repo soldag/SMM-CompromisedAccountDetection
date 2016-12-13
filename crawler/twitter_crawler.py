@@ -4,7 +4,7 @@ import csv
 from core.data_provider.twitter_provider import TwitterProvider
 
 
-def crawl_status_updates(output_path, user_limit=100):
+def crawl_status_updates(output_path, user_limit=100, limit=0):
     provider = TwitterProvider()
     user_ids = list(_get_most_popular_users(user_limit))
 
@@ -16,7 +16,7 @@ def crawl_status_updates(output_path, user_limit=100):
             print("Crawling user @%s (%i/%i)..." % (user_id, i+1, user_limit))
 
             # Retrieve tweets
-            tweets = provider.get_status_updates(user_id)
+            tweets = provider.get_status_updates(user_id, tweet_limit=limit)
             if tweets:
                 # Write header to csv, if not already done
                 if not csv_writer.fieldnames:

@@ -1,7 +1,6 @@
 import argparse
 
-from core import prepare_data
-from core import run_pipeline
+from core import prepare_data, run_pipeline
 from core.evaluation import writeToXlsx
 
 from crawler import crawl_status_updates
@@ -24,7 +23,7 @@ def analyze(data_source_type, classifier_type, experiments_count,
     print("Run experiments...")
     evaluation_data = []
     for i in range(0, experiments_count):
-        tp, tn, fp, fn = run_pipeline(status_updates, classifier_type)
+        tp, tn, fp, fn = run_pipeline(data_source_type, status_updates, classifier_type, dataset_path = 'C:/Users/sebas/Downloads/twitter_popular_users_10.csv')
         evaluation_data.append([i, tp, tn, fp, fn, (tp + tn) / (tp + tn + fp + fn), tp / (tp + fp), tp / (tp + fn)])
 
         print("Evaluation results for experiment %i/%i" % (i + 1, experiments_count))

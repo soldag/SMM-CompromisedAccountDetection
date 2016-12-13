@@ -20,8 +20,20 @@ def prepare_data(data_provider_type, **kwargs):
 
     return status_updates
 
+def run_pipeline(data_provider_type, status_updates, classifier_type, **kwargs):
+    base_size = 200
+    base_status_updates = get_status_updates(data_provider_type, **kwargs) + status_updates[:base_size]
+    base_features = [extract_features(tweet) for tweet in base_status_updates]
+    model = train_classifier(base_features, [False] * (len(base_status_updates) - base_size) + [True] * base_size, classifier_type)
+    predictions = []
+    for i in range(len(status_updates[20:])):
+        prediction = model.predict(extract_features(status_updates[i]))
+        predictions.append(prediction)
+    print(predictions)
+    return 0, 0, 0, 0
 
-def run_pipeline(status_updates, classifier_type):
+
+def run_pipeline_old(status_updates, classifier_type):
     # Split dataset into testing and training set (per author)
     train_status_updates = []
     test_status_updates = []

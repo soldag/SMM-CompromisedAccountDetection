@@ -1,16 +1,24 @@
-from .decision_tree import train_classifier as train_decision_tree
-from .perceptron import train_classifier as train_perceptron
+from .decision_tree import DecisionTreeClassifier
+from .perceptron import PerceptronClassifier
 
-type_classifier_mapping = {
-    'decision_tree': train_decision_tree,
-    'perceptron': train_perceptron
+TYPE_CLASSIFIER_MAPPING = {
+    'decision_tree': DecisionTreeClassifier,
+    'perceptron': PerceptronClassifier
 }
 
-def train_classifier(samples, labels, classifier_type, **kwargs):
+
+def train_classifier(samples, labels, classifier_type):
     if len(samples) != len(labels):
         raise ValueError('Number of samples has to equal number of labels!')
-    if classifier_type not in type_classifier_mapping:
+    if classifier_type not in TYPE_CLASSIFIER_MAPPING:
         raise ValueError('Invalid classifier_type!')
 
-    training_callable = type_classifier_mapping[classifier_type]
-    return training_callable(samples, labels, **kwargs)
+    classifier = TYPE_CLASSIFIER_MAPPING[classifier_type]()
+    return classifier.train(samples, labels)
+
+
+def create_classifier(classifier_type):
+    if classifier_type not in TYPE_CLASSIFIER_MAPPING:
+        raise ValueError('Invalid classifier_type!')
+
+    return TYPE_CLASSIFIER_MAPPING[classifier_type]()

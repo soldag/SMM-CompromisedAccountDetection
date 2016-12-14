@@ -3,7 +3,7 @@ from .mp_provider import MpProvider
 from .twitter_provider import TwitterProvider
 
 
-type_provider_mapping = {
+TYPE_PROVIDER_MAPPING = {
     'fth': FthProvider,
     'mp': MpProvider,
     'twitter': TwitterProvider
@@ -11,9 +11,9 @@ type_provider_mapping = {
 
 
 def get_status_updates(data_source_type, **kwargs):
-    if data_source_type not in type_provider_mapping:
+    if data_source_type not in TYPE_PROVIDER_MAPPING:
         raise ValueError('Invalid data_source_type!')
 
-    provider = type_provider_mapping[data_source_type]()
+    provider = TYPE_PROVIDER_MAPPING[data_source_type]()
     return provider.get_status_updates(**kwargs)
 

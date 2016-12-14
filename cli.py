@@ -1,72 +1,87 @@
+import sys
 import argparse
 
-from core import prepare_data, run_pipeline
-from core.evaluation import writeToXlsx
+from core import analyze_status_updates
+from core.data_provider import get_status_updates
 
 from crawler import crawl_status_updates
 
 
-def analyze(data_source_type, classifier_type, experiments_count,
-            dataset_path=None, twitter_user=None):
-    # Get status updates and prepare data
-    print("Retrieve and prepare data...")
-    provider_parameter = {}
-    if dataset_path is not None:
-        provider_parameter["dataset_path"] = dataset_path
-    elif data_source_type == "twitter" and twitter_user is not None:
-        provider_parameter["user_id"] = twitter_user
-    else:
-        raise ValueError("Either dataset_path or twitter_user has to be provided.")
-    status_updates = prepare_data(data_source_type, **provider_parameter)
-
-    # Run specified number of experiments
-    print("Run experiments...")
-    evaluation_data = []
-    for i in range(0, experiments_count):
-        tp, tn, fp, fn = run_pipeline(data_source_type, status_updates, classifier_type, dataset_path = 'C:/Users/sebas/Downloads/twitter_popular_users_10.csv')
-        evaluation_data.append([i, tp, tn, fp, fn, (tp + tn) / (tp + tn + fp + fn), tp / (tp + fp), tp / (tp + fn)])
-
-        print("Evaluation results for experiment %i/%i" % (i + 1, experiments_count))
-        print("True positives: " + str(tp))
-        print("True negatives: " + str(tn))
-        print("False positives: " + str(fp))
-        print("False negatives: " + str(fn))
-
-    writeToXlsx(evaluation_data, experiments_count)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="This application analyzes social media status updates in order to determine, whether an account was compromised or not.")
-    parser.add_argument("--action", "-a",
-                        help="The action that should be performed. Possible values are 'crawl' and 'analyze'.")
-    parser.add_argument("--data-source-type", "-t", default=None,
-                        help="The type of the specified data source. Possible values are 'fth', 'mp' and 'twitter'.")
-
-    # Data source arguments
-    parser.add_argument("--dataset-path", "-p", default=None,
-                        help="The path of the dataset, which contains the status_updates. ")
-    parser.add_argument("--twitter-user", "-u", default=None,
-                        help="The id of the twitter user, whose status updates should be analyzed.")
-
-    # Crawl arguments
+def crawl_cli(argv):
+    # Create argument parser
+    parser = argparse.ArgumentParser(description="This application crawls tweets from the 100 most popular twitter users and stores them on disk.")
+    parser.add_argument("--output-path", "-o",
+                        help="The output path of the generated dataset.")
     parser.add_argument("--user-limit", type=int, default=100,
                         help="The maximum number of accounts to crawl.")
     parser.add_argument("--limit", type=int, default=0,
                         help="The maximum number of status updates per user to crawl.")
+    args = parser.parse_args(argv)
 
-    # Train arguments
-    parser.add_argument("--classifier-type", "-c", default=None,
+    # Extract arguments and start crawling
+    crawl_status_updates('twitter', args.output_path,
+                         user_limit=args.user_limit, limit=args.limit)
+
+
+def analyze_cli(argv):
+    # Create argument parser
+    parser = argparse.ArgumentParser(description="This application analyzes social media status updates in order to determine, whether an account was compromised or not.")
+    parser.add_argument("--user-data-source", "-ut",
+                        help="The data source for tweets of the user that should be analyzed. Possible values are 'fth', 'mp' and 'twitter'.")
+    parser.add_argument("--user-twitter-id", "-uu", default=None,
+                        help="The id of the twitter user, whose status updates should be analyzed.")
+    parser.add_argument("--user-dataset-path", "-up", default=None,
+                        help="The path of the dataset of the user data source. ")
+    parser.add_argument("--ext-data-source", "-et",
+                        help="The data source for external tweets not written by the user. Possible values are 'fth', 'mp' and 'twitter'.")
+    parser.add_argument("--ext-dataset-path", "-ep",
+                        help="The path of the dataset of the external data source. ")
+    parser.add_argument("--classifier-type", "-c",
                         help="The type of the classifier to be trained. ")
-    parser.add_argument("--experiments-count", "-n", type=int, default=10,
-                        help="The number of experiments to run.")
+    args = parser.parse_args(argv)
 
-    args = parser.parse_args()
-
-    if args.action == 'crawl':
-        crawl_status_updates(args.data_source_type, args.dataset_path,
-                             user_limit=args.user_limit, limit=args.limit)
-    elif args.action == 'analyze':
-        analyze(args.data_source_type, args.classifier_type,
-                args.experiments_count, args.dataset_path, args.twitter_user)
+    # Extract arguments and start analyzing
+    user_data_source_options = {}
+    if args.user_dataset_path is not None:
+        user_data_source_options["dataset_path"] = args.user_dataset_path
+    elif args.user_data_source == "twitter" and args.user_twitter_id is not None:
+        user_data_source_options["user_id"] = args.user_twitter_id
     else:
-        print("Invalid action!")
+        sys.exit("Invalid user data source options!")
+    ext_data_source_options = {
+        "dataset_path": args.ext_dataset_path
+    }
+
+    # Get status updates
+    print("Retrieving status updates...")
+    user_status_updates = get_status_updates(args.user_data_source,
+                                             **user_data_source_options)
+    ext_status_updates = get_status_updates(args.ext_data_source,
+                                            **ext_data_source_options)
+
+    # Analyze status updates
+    print("Analyzing status updates...")
+    result = analyze_status_updates(user_status_updates, ext_status_updates,
+                                    args.classifier_type)
+
+    # Print result
+    if result:
+        print("Your account has not been compromised.")
+    else:
+        print("Your account has been compromised!")
+
+
+if __name__ == "__main__":
+    # Split arguments
+    if len(sys.argv) <= 1:
+        sys.exit("No action provided")
+    action = sys.argv[1]
+    argv = sys.argv[2:]
+
+    # Call sub CLI
+    if action == "crawl":
+        crawl_cli(argv)
+    elif action == "analyze":
+        analyze_cli(argv)
+    else:
+        sys.exit("Invalid action!")

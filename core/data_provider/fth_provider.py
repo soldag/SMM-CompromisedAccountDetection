@@ -29,14 +29,15 @@ class FthProvider:
             number_of_shares=self._parse_int(row['RTs']),
             number_of_likes=self._parse_int(row['Favs']))
 
-
-    def _parse_int(self, value, default=0):
+    @staticmethod
+    def _parse_int(value, default=0):
         try:
             return int(value)
         except ValueError:
             return default
 
-    def _parse_float(self, value, default=0):
+    @staticmethod
+    def _parse_float(value, default=0):
         try:
             return float(value)
         except ValueError:

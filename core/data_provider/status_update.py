@@ -1,4 +1,4 @@
-from datetime import datetime
+from dateutil import parser as date_parser
 
 class StatusUpdate:
     def __init__(self, id, author, content, date_time=None, language=None, country=None,
@@ -73,7 +73,7 @@ class StatusUpdate:
         return StatusUpdate(id=obj["id"],
                             author=obj["author"],
                             content=obj["content"],
-                            date_time=datetime.strptime(obj["date_time"], "%Y-%m-%d %H:%M:%S"),
+                            date_time=date_parser.parse(obj["date_time"]),
                             language=obj["language"],
                             country=obj["country"],
                             latitude=obj["latitude"],

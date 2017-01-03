@@ -5,5 +5,10 @@
 {% endblock %}
 {% block content %}
     <h1 class="text-center">Your account was compromised!</h1>
-    <span>See details below (tbd).</span>
+    <span>See details below.</span>
+    <ul>
+      {% for tweet in compromised_tweets %}
+        <li>{{ tweet.content }}</li>
+      {% endfor %}
+    </ul>
 {% endblock %}

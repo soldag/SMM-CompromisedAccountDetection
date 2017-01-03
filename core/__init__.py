@@ -42,15 +42,11 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
         if False in predictions:
             # Move window to start after the false prediction
             start = start + predictions.index(False) + 1
-
-            false_predictions.append(predictions.index(False))
+            false_predictions.append(user_status_updates[start + predictions.index(False)])
         else:
             # Move window
             start = end
 
         end = start + safe_zone_length
 
-    if false_predictions:
-        return False
-    else:
-        return True
+    return false_predictions

@@ -1,9 +1,13 @@
 from .decision_tree import DecisionTreeClassifier
 from .perceptron import PerceptronClassifier
+from.one_class_svm import OneClassSvmClassifier
+from.isolation_forest import IsolationForestClassifier
 
 TYPE_CLASSIFIER_MAPPING = {
     'decision_tree': DecisionTreeClassifier,
-    'perceptron': PerceptronClassifier
+    'perceptron': PerceptronClassifier,
+    'one_class_svm': OneClassSvmClassifier,
+    'isolation_forest': IsolationForestClassifier
 }
 
 

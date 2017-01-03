@@ -14,28 +14,24 @@ START_BATCH_SIZE = 50
 
 def analyze_status_updates(user_status_updates, ext_status_updates,
                            classifier_type):
-    # Extract features
-    user_features = extract_features_batch(user_status_updates)
-    ext_features = extract_features_batch(ext_status_updates)
-
-    # Build labels
-    user_labels = [True] * len(user_features)
-    ext_labels = [False] * len(ext_features)
+    # Sort status updates by publishing date time
+    user_status_updates = sorted(user_status_updates, key=lambda x: x.date_time)
 
     # Train classifier iteratively
     start = 0
     end = START_BATCH_SIZE
     classifier = create_classifier(classifier_type)
     while end < len(user_status_updates):  # TODO handle case, if user has less than START_BATCH_SIZE tweets
-        print("Train model with window size %s to %s" % (start, end))
-
         # Train model with status updates in window (start to end)
-        samples = user_features[start:end] + ext_features
-        labels = user_labels[start:end] + ext_labels
-        classifier.train_iteratively(samples, labels)
+        print("Train model with window size %s to %s" % (start, end))
+        if start == 0:
+            classifier.train_iteratively(user_status_updates[start:end],
+                                         ext_status_updates)
+        else:
+            classifier.train_iteratively(user_status_updates[start:end], [])
 
         # Predict for remaining status updates
-        predictions = classifier.predict(user_features[end:]).tolist()  # TODO shuffle with external tweets for evaluation
+        predictions = classifier.predict(user_status_updates[end:])  # TODO shuffle with external tweets for evaluation
 
         # Extend status update window by safe zone (first x status updates
         # that were classified as written by the user)

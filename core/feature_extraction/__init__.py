@@ -1,3 +1,5 @@
+from sklearn import preprocessing
+
 from .writing_style import WritingStyleFeatures
 from .meta_data import MetaDataFeatures
 
@@ -9,5 +11,9 @@ def extract_features(resource):
     return writing_style_features + meta_data_features
 
 
-def extract_features_batch(resources):
-    return [extract_features(resource) for resource in resources]
+def extract_features_batch(resources, scale=True):
+    features = [extract_features(resource) for resource in resources]
+    if scale:
+        features = preprocessing.scale(features).tolist()
+
+    return features

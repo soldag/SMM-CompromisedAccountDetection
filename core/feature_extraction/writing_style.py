@@ -4,11 +4,13 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 
 
 class WritingStyleFeatures:
-    special_characters = '~ @#$%^&*-_= ,+><[]{}/\|'
-    punctuations = ',.?!:;`"'
+    SPECIAL_CHARACTERS = '~ @#$%^&*-_= ,+><[]{}/\|'
+    PUNCTUATIONS = ',.?!:;`"'
 
     def __init__(self, text):
         self.text = text
+        self.words = word_tokenize(self.text)
+        self.sentences = sent_tokenize(self.text, language='english')
 
     def get_features(self):
         # Lexical features
@@ -18,14 +20,14 @@ class WritingStyleFeatures:
                                       self.number_of_chars_of_class(string.digits),
                                       self.number_of_chars_of_class(string.whitespace)]\
                                      + self.char_frequencies(string.ascii_lowercase)\
-                                     + self.char_frequencies(self.special_characters)
+                                     + self.char_frequencies(self.SPECIAL_CHARACTERS)
         lexical_word_features = [self.number_of_words(),
                                  self.number_of_short_words(),
                                  self.avg_word_length(),
                                  self.avg_sentence_length_chars(),
                                  self.avg_sentence_length_words(),
                                  self.number_of_unique_word()]
-        syntactic_features = self.char_frequencies(self.punctuations) + self.function_word_frequency()
+        syntactic_features = self.char_frequencies(self.PUNCTUATIONS) + self.function_word_frequency()
         structural_features = [self.number_of_lines(),
                                self.number_of_sentences()]
         lexical_features = lexical_character_features + lexical_word_features + syntactic_features + structural_features
@@ -42,25 +44,25 @@ class WritingStyleFeatures:
         return [self.text.upper().count(c) for c in class_characters]
 
     def number_of_words(self):
-        return len(word_tokenize(self.text))
+        return len(self.words)
 
     def number_of_short_words(self):
-        return len([word for word in word_tokenize(self.text) if len(word) < 4])
+        return len([word for word in self.words if len(word) < 4])
 
     def avg_word_length(self):
-        return np.mean([len(word) for word in word_tokenize(self.text)])
+        return np.mean([len(word) for word in self.words])
 
     def number_of_unique_word(self):
-        return len(set(word_tokenize(self.text)))
+        return len(set(self.words))
 
     def number_of_sentences(self):
-        return len(sent_tokenize(self.text, language='english'))
+        return len(self.sentences)
 
     def avg_sentence_length_chars(self):
-        return np.mean([len(s) for s in sent_tokenize(self.text, language='english')])
+        return np.mean([len(s) for s in self.sentences])
 
     def avg_sentence_length_words(self):
-        return np.mean([len(word_tokenize(s)) for s in sent_tokenize(self.text, language='english')])
+        return np.mean([len(word_tokenize(s)) for s in self.sentences])
 
     def number_of_lines(self):
         return len(self.text.splitlines())
@@ -80,4 +82,4 @@ class WritingStyleFeatures:
                           'same', 'towards', 'without', 'because', 'he', 'need', 'several', 'under', 'worth', 'before',
                           'her', 'neither', 'she', 'unless', 'would', 'behind', 'him', 'no', 'should', 'unlike', 'yes',
                           'below', 'i', 'nobody', 'since', 'until', 'you', 'beside', 'if', 'none', 'so', 'up', 'your']
-        return [word_tokenize(self.text).count(w) for w in function_words]
+        return [self.words.count(w) for w in function_words]

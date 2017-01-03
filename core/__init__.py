@@ -1,7 +1,4 @@
-import math
 import random
-import operator
-import itertools
 
 from .data_provider import get_status_updates
 from .feature_extraction import extract_features, extract_features_batch
@@ -14,6 +11,10 @@ START_BATCH_SIZE = 50
 
 def analyze_status_updates(user_status_updates, ext_status_updates,
                            classifier_type):
+    # Raise error if user has not enough status updates for analysis
+    if len(user_status_updates) <= START_BATCH_SIZE:
+        raise ValueError("Number of status updates not sufficient.")
+
     # Sort status updates by publishing date time
     user_status_updates = sorted(user_status_updates, key=lambda x: x.date_time)
 
@@ -21,7 +22,7 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
     start = 0
     end = START_BATCH_SIZE
     classifier = create_classifier(classifier_type)
-    while end < len(user_status_updates):  # TODO handle case, if user has less than START_BATCH_SIZE tweets
+    while end < len(user_status_updates):
         # Train model with status updates in window (start to end)
         print("Train model with window size %s to %s" % (start, end))
         if start == 0:

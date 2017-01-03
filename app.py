@@ -20,6 +20,9 @@ def check():
         user_status_updates = get_status_updates('twitter', user_id=user_id)
         ext_status_updates = prepare_data('fth', dataset_path="./follow_the_hashtag_usa.csv")
         result = analyze_status_updates(user_status_updates, ext_status_updates, 'perceptron')
-        return str(result)
+        if result:
+            return render_template('check_success.html')
+        else:
+            return render_template('check_compromised.html')
     else:
         return render_template('check.html')

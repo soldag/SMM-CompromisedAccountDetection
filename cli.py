@@ -96,7 +96,7 @@ def evaluate_cli(argv):
                                         dataset_path=args.dataset_path)
 
     grouped_status_updates = [list(g) for k, g in itertools.groupby(status_updates, lambda x: x.author)]
-    n_user = 100
+    n_user = 500
     n_ext = math.ceil(n_user / (len(grouped_status_updates) - 1))
     metrics_collection = []
     for i in range(len(grouped_status_updates)):

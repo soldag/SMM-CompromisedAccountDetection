@@ -15,5 +15,6 @@ def get_status_updates(data_source_type, **kwargs):
         raise ValueError('Invalid data_source_type!')
 
     provider = TYPE_PROVIDER_MAPPING[data_source_type]()
-    return provider.get_status_updates(**kwargs)
+    return sorted(provider.get_status_updates(**kwargs),
+                  key=lambda x: x.date_time)
 

@@ -12,9 +12,6 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
     if len(user_status_updates) <= START_BATCH_SIZE:
         raise ValueError("Number of status updates not sufficient.")
 
-    # Sort status updates by publishing date time
-    user_status_updates = sorted(user_status_updates, key=lambda x: x.date_time)
-
     # Train classifier iteratively
     start = 0
     end = START_BATCH_SIZE

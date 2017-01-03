@@ -95,6 +95,7 @@ def evaluate_cli(argv):
     status_updates = get_status_updates(args.data_source,
                                         dataset_path=args.dataset_path)
 
+    status_updates = sorted(status_updates, key=lambda x: x.author)
     grouped_status_updates = [list(g) for k, g in itertools.groupby(status_updates, lambda x: x.author)]
     n_user = 500
     n_ext = math.ceil(n_user / (len(grouped_status_updates) - 1))

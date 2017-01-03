@@ -40,9 +40,11 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
         # that were classified as written by the user)
         safe_zone_length = len(predictions)
         if False in predictions:
+            false_predictions.append(user_status_updates[start + predictions.index(False)])
+            user_status_updates.remove(user_status_updates[start + predictions.index(False)])
+
             # Move window to start after the false prediction
             start = start + predictions.index(False) + 1
-            false_predictions.append(user_status_updates[start + predictions.index(False)])
         else:
             # Move window
             start = end

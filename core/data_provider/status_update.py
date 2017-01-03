@@ -1,5 +1,6 @@
 from dateutil import parser as date_parser
 
+
 class StatusUpdate:
     def __init__(self, id, author, content, date_time=None, language=None, country=None,
                  latitude=None, longitude=None, number_of_shares=None, number_of_likes=None):

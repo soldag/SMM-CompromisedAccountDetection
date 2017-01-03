@@ -13,7 +13,7 @@ def extract_features(resource):
 
 def extract_features_batch(resources, scale=True):
     features = [extract_features(resource) for resource in resources]
-    if scale:
+    if scale and resources:
         features = preprocessing.scale(features).tolist()
 
     return features

@@ -4,7 +4,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 
 
 class WritingStyleFeatures:
-    SPECIAL_CHARACTERS = '~ @#$%^&*-_= ,+><[]{}/\|'
+    SPECIAL_CHARACTERS = '~ @#$%^&*-_=,+><[]{}/\|'
     PUNCTUATIONS = ',.?!:;`"'
 
     def __init__(self, text):
@@ -41,7 +41,7 @@ class WritingStyleFeatures:
         return len([1 for c in self.text if c in class_characters])
 
     def char_frequencies(self, class_characters):
-        return [self.text.upper().count(c) for c in class_characters]
+        return [self.text.count(c) for c in class_characters]
 
     def number_of_words(self):
         return len(self.words)

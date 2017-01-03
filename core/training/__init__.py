@@ -14,7 +14,8 @@ def train_classifier(samples, labels, classifier_type):
         raise ValueError('Invalid classifier_type!')
 
     classifier = TYPE_CLASSIFIER_MAPPING[classifier_type]()
-    return classifier.train(samples, labels)
+    classifier.train(samples, labels)
+    return classifier
 
 
 def create_classifier(classifier_type):

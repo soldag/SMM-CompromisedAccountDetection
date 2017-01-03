@@ -16,6 +16,8 @@ class IsolationForestClassifier:
     def train_iteratively(self, pos_samples, neg_samples):
         self.pos_features += extract_features_batch(pos_samples, scale=True)
 
+        self._train()
+
     def _train(self):
         self.classifier = self.classifier.fit(self.pos_features)
 

@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+import random
 
 from .status_update import StatusUpdate
 
@@ -10,8 +11,9 @@ class FthProvider:
 
     def get_status_updates(self, dataset_path):
         with open(dataset_path, 'r', encoding='latin-1') as file:
-            reader = csv.DictReader(file, delimiter=self.DELIMITER)
-            status_updates = [self._parse_row(row) for row in reader]
+            reader = list(csv.DictReader(file, delimiter=self.DELIMITER))
+            tweets = random.sample(reader, 100)
+            status_updates = [self._parse_row(row[1]) for row in enumerate(tweets)]
 
             return status_updates
 

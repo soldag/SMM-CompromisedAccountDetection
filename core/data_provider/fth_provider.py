@@ -4,7 +4,6 @@ import random
 
 from .status_update import StatusUpdate
 
-
 class FthProvider:
     DELIMITER = ';'
     DATE_FORMAT = '%Y-%m-%d%H:%M'

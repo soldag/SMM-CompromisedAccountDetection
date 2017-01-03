@@ -22,6 +22,7 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
     start = 0
     end = START_BATCH_SIZE
     classifier = create_classifier(classifier_type)
+    false_predictions = []
     while end < len(user_status_updates):
         # Train model with status updates in window (start to end)
         print("Train model with window size %s to %s" % (start, end))
@@ -32,19 +33,24 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
             classifier.train_iteratively(user_status_updates[start:end], [])
 
         # Predict for remaining status updates
-        predictions = classifier.predict(user_status_updates[end:])  # TODO shuffle with external tweets for evaluation
+        # TODO shuffle with external tweets for evaluation
+        predictions = classifier.predict(user_status_updates[end:])
 
         # Extend status update window by safe zone (first x status updates
         # that were classified as written by the user)
         safe_zone_length = len(predictions)
         if False in predictions:
-            safe_zone_length = predictions.index(False)
+            # Move window to start after the false prediction
+            start = start + predictions.index(False) + 1
 
-        if safe_zone_length == 0:
-            return False
+            false_predictions.append(predictions.index(False))
         else:
             # Move window
             start = end
-            end = start + safe_zone_length
 
-    return True
+        end = start + safe_zone_length
+
+    if false_predictions:
+        return False
+    else:
+        return True

@@ -34,7 +34,7 @@ The first option is the switch between the crawl cli and the analyze cli:
 - ```-up / --user-dataset-path USER_DATASET_PATH``` The path of the dataset of the user data source.
 - ```-et / --ext-data-source EXT_DATA_SOURCE``` The data source for external tweets not written by the user. Possible values are ```fth```, ```mp``` and ```twitter```.
 - ```-ep / --ext-dataset-path EXT_DATASET_PATH``` The path of the dataset of the external data source.
-- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree``` and ```perceptron```.
+- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
 
 #### Examples
 ```

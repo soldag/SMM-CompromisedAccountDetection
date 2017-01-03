@@ -19,32 +19,36 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 
 #### Options
 ##### General arguments
-- ```-a / --action ACTION``` The action that should be performed. Possible values are `crawl` and `analyze`
-- ```-t / --data-source-type DATA_SOURCE_TYPE``` The type of the specified data source, which contains the status updates.
+The first option is the switch between the crawl cli and the analyze cli:
+- ```crawl``` crawls tweets from the (default: 100) most popular twitter users and stores them on disk.
+- ```analyze``` analyzes social media status updates in order to determine, whether an account was compromised or not.
 
 ##### Crawling status updates
-- ```-p / --dataset-path FILE_PATH``` The path of the output dataset, that should contain the crawled status updates. 
-- ```--user-limit LIMIT``` The maximum number of accounts to crawl. (default: 100)
+- ```-o /--output-path OUTPUT_PATH``` The output path of the generated dataset.
+- ```--user-limit USER_LIMIT``` The maximum number of accounts to crawl.
+- ```--limit LIMIT``` The maximum number of status updates per user to crawl. (default: 100)
 
 ##### Analyzing status updates
-- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. (currently only ```decision_tree```)
-- ```-p / --dataset-path FILE_PATH``` The path of the dataset, which contains the status updates. 
-- ```-u / --twitter-user TWITTER_USER_ID``` The id of the twitter user, whose status updates should be analyzed.
-- ```-n / --experiments-count NUMBER_OF_EXPERIMENTS``` The number of experiments to run. (default: 10)
+- ```-ut / --user-data-source USER_DATA_SOURCE``` The data source for tweets of the user that should be analyzed. Possible values are ```fth```, ```mp``` and ```twitter```.
+- ```-uu / --user-twitter-id USER_TWITTER_ID``` The id of the twitter user, whose status updates should be analyzed.
+- ```-up / --user-dataset-path USER_DATASET_PATH``` The path of the dataset of the user data source.
+- ```-et / --ext-data-source EXT_DATA_SOURCE``` The data source for external tweets not written by the user. Possible values are ```fth```, ```mp``` and ```twitter```.
+- ```-ep / --ext-dataset-path EXT_DATASET_PATH``` The path of the dataset of the external data source.
+- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree``` and ```perceptron```.
 
 #### Examples
 ```
 # Crawl 50 most popular users
-python cli.py -a crawl -t twitter -p output.csv --user-limit 50
+python cli.py -a crawl -o output.csv --user-limit 50
 
-# Analyze 'Follow the Hashtag' dataset using an decision tree
-python cli.py -a analyze -t fth -p fth.csv -c decision_tree
-
-# Analyze twitter user @katyperry using an decision tree with 150 experiments
-python cli.py -a analyze -t twitter -u katyperry -c decision_tree -n 150
+# Analyze twitter account of sebsatian_kliem against status updates from the 'Follow the Hashtag' dataset using the perceptron classifier
+python cli.py analyze -ut twitter -uu sebastian_kliem -et fth -ep data/follow_the_hashtag_usa.csv -c perceptron
 ```
 
 ### Web App
 ```
+# Run the app locally (DO NOT use this in production)
 ./run_app_dev.sh
 ```
+
+The app takes a twitter url from a specific user as input and uses the perceptron classifier.

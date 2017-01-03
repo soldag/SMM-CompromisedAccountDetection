@@ -2,8 +2,8 @@ from sklearn import linear_model
 
 
 class PerceptronClassifier:
-    def __init__(self, classes):
-        self.classes = classes
+    def __init__(self):
+        self.classes = [True, False]
         self.classifier = linear_model.Perceptron()
 
     def train(self, samples, labels):

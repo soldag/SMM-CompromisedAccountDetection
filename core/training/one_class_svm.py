@@ -23,4 +23,4 @@ class OneClassSvmClassifier:
 
     def predict(self, sample):
         features = extract_features_batch(sample)
-        return [p == -1 for p in self.classifier.predict(features)]
+        return [p == 1 for p in self.classifier.predict(features)]

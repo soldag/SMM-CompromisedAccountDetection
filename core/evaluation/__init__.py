@@ -36,7 +36,7 @@ def write_evaluation_results(data):
 
     # Iterate over the data and write it out row by row.
     for i in range(len(data)):
-        tp, tn, fp, fn, rec, prec, fm, acc = data[i]
+        tp, tn, fp, fn, prec, rec, fm, acc = data[i]
         worksheet.write(row, col, i)
         worksheet.write(row, col + 1, tp)
         worksheet.write(row, col + 2, tn)

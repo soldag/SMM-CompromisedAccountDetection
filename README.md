@@ -22,6 +22,7 @@ For installation instructions please visit [http://www.nltk.org/data.html](http:
 The first option is the switch between the crawl cli and the analyze cli:
 - ```crawl``` crawls tweets from the (default: 100) most popular twitter users and stores them on disk.
 - ```analyze``` analyzes social media status updates in order to determine, whether an account was compromised or not.
+- ```evaluate``` evaluates the anomaly detection approach with cross-validation.
 
 ##### Crawling status updates
 - ```-o /--output-path OUTPUT_PATH``` The output path of the generated dataset.
@@ -35,6 +36,18 @@ The first option is the switch between the crawl cli and the analyze cli:
 - ```-et / --ext-data-source EXT_DATA_SOURCE``` The data source for external tweets not written by the user. Possible values are ```fth```, ```mp``` and ```twitter```.
 - ```-ep / --ext-dataset-path EXT_DATASET_PATH``` The path of the dataset of the external data source.
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
+
+##### Evaluation
+- ```-t / --data-source DATA_SOURCE``` The data source for tweets that should be used for cross-validation. Possible values are ```fth```, ```mp``` and ```twitter```.
+- ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for cross-validation.
+- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
+
+
+
+   parser.add_argument("--dataset-path", "-p",
+                        help="The path of the dataset of the user data source. ")
+    parser.add_argument("--classifier-type", "-c",
+                        help="The type of the classifier to be trained. ")
 
 #### Examples
 ```

@@ -34,7 +34,7 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
         safe_zone_length = _index(predictions, False, len(predictions))
 
         # Move window
-        if safe_zone_length == 0:
+        if safe_zone_length == 0:   # next element is predicted to be suspicious
             num_false_predictions = _index(predictions, True, len(predictions))
             suspected_status_updates += [user_status_updates[end + i]
                                          for i in range(num_false_predictions)]

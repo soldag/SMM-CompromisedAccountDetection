@@ -81,13 +81,13 @@ def analyze_cli(argv):
 
 def evaluate_cli(argv):
     # Create argument parser
-    parser = argparse.ArgumentParser(description="This application evaluates the anomaly detection aproach.")
+    parser = argparse.ArgumentParser(description="This application evaluates the anomaly detection approach.")
     parser.add_argument("--data-source", "-t",
-                        help="The data source for tweets that should be analyzed. Possible values are 'fth', 'mp' and 'twitter'.")
+                        help="The data source for tweets that should be used for cross-validation. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
-                        help="The path of the dataset of the user data source. ")
+                        help="The path of the dataset that should be used for cross-validation.")
     parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be trained. ")
+                        help="The type of the classifier to be trained.")
     args = parser.parse_args(argv)
 
     # Get status updates
@@ -128,7 +128,7 @@ def evaluate_cli(argv):
 if __name__ == "__main__":
     # Split arguments
     if len(sys.argv) <= 1:
-        sys.exit("No action provided")
+        sys.exit("No action provided!")
     action = sys.argv[1]
     argv = sys.argv[2:]
 

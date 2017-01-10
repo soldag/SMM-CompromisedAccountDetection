@@ -5,7 +5,9 @@
 {% endblock %}
 {% block content %}
     <h1 class="text-center">Your account was compromised!</h1>
+    <p class="text-center">
+      These are the suspicious tweets:
+    </p>
     <div id="result-block" data-tweet-ids="{{ compromised_ids }}">
-
     </div>
 {% endblock %}

@@ -41,7 +41,7 @@ class WritingStyleFeatures:
                                  self.avg_sentence_length_chars(),
                                  self.avg_sentence_length_words(),
                                  self.number_of_unique_word()]
-        syntactic_features = self.char_frequencies(self.PUNCTUATIONS) + self.function_word_frequency() # TODO use char_frequencies?
+        syntactic_features = self.char_frequencies(self.PUNCTUATIONS) #+ self.function_word_frequency()
         structural_features = [self.number_of_lines(),
                                self.number_of_sentences()]
 

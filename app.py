@@ -24,8 +24,9 @@ def check():
         user_status_updates += test_tweets
 
         result = analyze_status_updates(user_status_updates, ext_status_updates, 'perceptron')
+        compromised_ids = list(map(lambda x: x.id, result))
         if result:
-            return render_template('check_compromised.html', compromised_tweets = result)
+            return render_template('check_compromised.html', compromised_tweets = result, compromised_ids = compromised_ids)
         else:
             return render_template('check_success.html')
     else:

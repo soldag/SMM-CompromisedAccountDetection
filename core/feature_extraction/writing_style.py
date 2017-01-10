@@ -6,6 +6,20 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 class WritingStyleFeatures:
     SPECIAL_CHARACTERS = '~ @#$%^&*-_=,+><[]{}/\|'
     PUNCTUATIONS = ',.?!:;`"'
+    FUNCTION_WORDS = ['a', 'between', 'in', 'nor', 'some', 'upon', 'about', 'both', 'including', 'nothing',
+                      'somebody us', 'above', 'but', 'inside', 'of', 'someone', 'used', 'after', 'by', 'into',
+                      'off', 'something', 'via', 'all', 'can', 'is', 'on', 'such', 'we', 'although', 'cos', 'it',
+                      'once', 'than', 'what', 'am', 'do', 'its', 'one', 'that', 'whatever', 'among', 'down',
+                      'latter', 'onto', 'the', 'when', 'an', 'each', 'less', 'opposite', 'their', 'where', 'and',
+                      'either', 'like', 'or', 'them', 'whether', 'another', 'enough', 'little', 'our', 'these',
+                      'which', 'any', 'every', 'lots', 'outside', 'they', 'while', 'anybody', 'everybody', 'many',
+                      'over', 'this', 'who', 'anyone', 'everyone', 'me', 'own', 'those', 'whoever', 'anything',
+                      'everything', 'more', 'past', 'though', 'whom', 'are', 'few', 'most', 'per', 'through',
+                      'whose', 'around', 'following', 'much', 'plenty', 'till', 'will', 'as', 'for', 'must', 'plus',
+                      'to', 'with', 'at', 'from', 'my', 'regarding', 'toward', 'within', 'be', 'have', 'near',
+                      'same', 'towards', 'without', 'because', 'he', 'need', 'several', 'under', 'worth', 'before',
+                      'her', 'neither', 'she', 'unless', 'would', 'behind', 'him', 'no', 'should', 'unlike', 'yes',
+                      'below', 'i', 'nobody', 'since', 'until', 'you', 'beside', 'if', 'none', 'so', 'up', 'your']
 
     def __init__(self, text):
         self.text = text
@@ -27,7 +41,7 @@ class WritingStyleFeatures:
                                  self.avg_sentence_length_chars(),
                                  self.avg_sentence_length_words(),
                                  self.number_of_unique_word()]
-        syntactic_features = self.char_frequencies(self.PUNCTUATIONS) + self.function_word_frequency()
+        syntactic_features = self.char_frequencies(self.PUNCTUATIONS) + self.function_word_frequency() # TODO use char_frequencies?
         structural_features = [self.number_of_lines(),
                                self.number_of_sentences()]
 
@@ -67,18 +81,4 @@ class WritingStyleFeatures:
         return len(self.text.splitlines())
 
     def function_word_frequency(self):
-        function_words = ['a', 'between', 'in', 'nor', 'some', 'upon', 'about', 'both', 'including', 'nothing',
-                          'somebody us', 'above', 'but', 'inside', 'of', 'someone', 'used', 'after', 'by', 'into',
-                          'off', 'something', 'via', 'all', 'can', 'is', 'on', 'such', 'we', 'although', 'cos', 'it',
-                          'once', 'than', 'what', 'am', 'do', 'its', 'one', 'that', 'whatever', 'among', 'down',
-                          'latter', 'onto', 'the', 'when', 'an', 'each', 'less', 'opposite', 'their', 'where', 'and',
-                          'either', 'like', 'or', 'them', 'whether', 'another', 'enough', 'little', 'our', 'these',
-                          'which', 'any', 'every', 'lots', 'outside', 'they', 'while', 'anybody', 'everybody', 'many',
-                          'over', 'this', 'who', 'anyone', 'everyone', 'me', 'own', 'those', 'whoever', 'anything',
-                          'everything', 'more', 'past', 'though', 'whom', 'are', 'few', 'most', 'per', 'through',
-                          'whose', 'around', 'following', 'much', 'plenty', 'till', 'will', 'as', 'for', 'must', 'plus',
-                          'to', 'with', 'at', 'from', 'my', 'regarding', 'toward', 'within', 'be', 'have', 'near',
-                          'same', 'towards', 'without', 'because', 'he', 'need', 'several', 'under', 'worth', 'before',
-                          'her', 'neither', 'she', 'unless', 'would', 'behind', 'him', 'no', 'should', 'unlike', 'yes',
-                          'below', 'i', 'nobody', 'since', 'until', 'you', 'beside', 'if', 'none', 'so', 'up', 'your']
-        return [self.words.count(w) for w in function_words]
+        return [self.words.count(w) for w in self.FUNCTION_WORDS]

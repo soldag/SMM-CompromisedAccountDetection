@@ -21,3 +21,13 @@ body {
   margin-top: 13rem;
   margin-bottom: 4rem;
 }
+
+.select-tweet-container {
+  position: relative;
+}
+
+.select-tweet-checkbox {
+  position: absolute;
+  bottom: calc(50% - 7px);
+  right: 25%;
+}

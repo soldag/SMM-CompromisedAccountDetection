@@ -7,6 +7,7 @@ from core import analyze_status_updates
 
 import urllib.parse as url_parser
 import random
+import json
 
 app = Flask(__name__)
 
@@ -15,6 +16,8 @@ app = Flask(__name__)
 def check():
     url = request.args.get('account_url', '')
     if url:
+        corrected_tweets_ids = request.args.getlist('select-tweet-checkbox')
+        print(corrected_tweets_ids)
         parsed_url = url_parser.urlparse(url)
         user_id = parsed_url.path.split('/')[1]
         user_status_updates = get_status_updates('twitter', user_id=user_id)
@@ -26,7 +29,7 @@ def check():
         result = analyze_status_updates(user_status_updates, ext_status_updates, 'perceptron')
         compromised_ids = list(map(lambda x: x.id, result))
         if result:
-            return render_template('check_compromised.html', compromised_tweets = result, compromised_ids = compromised_ids)
+            return render_template('check_compromised.html', compromised_tweets = result, compromised_ids = compromised_ids, url = url)
         else:
             return render_template('check_success.html')
     else:

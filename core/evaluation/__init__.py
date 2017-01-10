@@ -6,9 +6,9 @@ def calculate_metrics(pos_samples, neg_samples, neg_predictions):
     tn = len([x for x in neg_samples if x in neg_predictions])
     fp = len([x for x in neg_samples if x not in neg_predictions])
     fn = len([x for x in pos_samples if x in neg_predictions])
-    prec = tp / (tp + fp)
-    rec = tp / (tp + fn)
-    fm = 2 * (prec * rec) / (prec + rec)
+    prec = tp / (tp + fp) if tp + fp != 0 else 0
+    rec = tp / (tp + fn) if tp + fn != 0 else 0
+    fm = 2 * (prec * rec) / (prec + rec) if prec + rec != 0 else 0
     acc = (tp + tn) / (len(pos_samples) + len(neg_samples))
 
     return tp, tn, fp, fn, prec, rec, fm, acc

@@ -1,7 +1,5 @@
 from sklearn import linear_model
 
-from ..feature_extraction import extract_features_batch
-
 
 class PerceptronClassifier:
     def __init__(self):

@@ -9,13 +9,13 @@ START_BATCH_SIZE = 100
 
 
 def analyze_status_updates(user_status_updates, ext_status_updates,
-                           classifier_type):
+                           classifier_type, scale_features=True):
     # Raise error if user has not enough status updates for analysis
     if len(user_status_updates) <= START_BATCH_SIZE:
         raise ValueError("Number of status updates not sufficient.")
 
     # Extract features
-    all_features = extract_features_batch(user_status_updates + ext_status_updates, scale=True)
+    all_features = extract_features_batch(user_status_updates + ext_status_updates, scale_features)
     all_features = VarianceThreshold().fit_transform(all_features).tolist()
     user_features = all_features[:len(user_status_updates)]
     ext_features = all_features[len(user_status_updates):]

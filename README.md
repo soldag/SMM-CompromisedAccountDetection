@@ -36,11 +36,13 @@ The first option is the switch between the crawl cli and the analyze cli:
 - ```-et / --ext-data-source EXT_DATA_SOURCE``` The data source for external tweets not written by the user. Possible values are ```fth```, ```mp``` and ```twitter```.
 - ```-ep / --ext-dataset-path EXT_DATASET_PATH``` The path of the dataset of the external data source.
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
+- ```--no-scaling``` Disable feature scaling.
 
 ##### Evaluation
 - ```-t / --data-source DATA_SOURCE``` The data source for tweets that should be used for cross-validation. Possible values are ```fth```, ```mp``` and ```twitter```.
 - ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for cross-validation.
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
+- ```--no-scaling``` Disable feature scaling.
 
 #### Examples
 ```

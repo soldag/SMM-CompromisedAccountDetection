@@ -42,6 +42,8 @@ def analyze_cli(argv):
                         help="The path of the dataset of the external data source. ")
     parser.add_argument("--classifier-type", "-c",
                         help="The type of the classifier to be trained. ")
+    parser.add_argument("--no-scaling", dest='scale_features', action='store_false',
+                        help="Scale feature vector. ")
     args = parser.parse_args(argv)
 
     # Extract arguments and start analyzing
@@ -69,7 +71,8 @@ def analyze_cli(argv):
     status_updates = user_status_updates + test_tweets
     neg_predictions = analyze_status_updates(status_updates,
                                              ext_status_updates,
-                                             args.classifier_type)
+                                             args.classifier_type,
+                                             args.scale_features)
 
     # Evaluation metrics
     tp, tn, fp, fn, prec, rec, fm, acc = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
@@ -88,6 +91,8 @@ def evaluate_cli(argv):
                         help="The path of the dataset that should be used for cross-validation.")
     parser.add_argument("--classifier-type", "-c",
                         help="The type of the classifier to be trained.")
+    parser.add_argument("--no-scaling", dest='scale_features', action='store_false',
+                        help="Scale feature vector. ")
     args = parser.parse_args(argv)
 
     # Get status updates
@@ -110,7 +115,8 @@ def evaluate_cli(argv):
         # Run classifier
         neg_predictions = analyze_status_updates(user_status_updates + ext_testing_status_updates,
                                                  ext_training_status_updates,
-                                                 args.classifier_type)
+                                                 args.classifier_type,
+                                                 args.scale_features)
 
         # Evaluation metrics
         metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],

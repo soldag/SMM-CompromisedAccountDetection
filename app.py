@@ -11,10 +11,10 @@ import random
 app = Flask(__name__)
 
 
-@app.route('/check/', methods=['GET', 'POST'])
+@app.route('/check/', methods=['GET'])
 def check():
-    if request.method == 'POST':
-        url = request.form.get('account_url', 'hpi_de')
+    url = request.args.get('account_url', '')
+    if url:
         parsed_url = url_parser.urlparse(url)
         user_id = parsed_url.path.split('/')[1]
         user_status_updates = get_status_updates('twitter', user_id=user_id)

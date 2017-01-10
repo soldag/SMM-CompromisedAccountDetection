@@ -30,9 +30,8 @@ class WritingStyleFeatures:
         syntactic_features = self.char_frequencies(self.PUNCTUATIONS) + self.function_word_frequency()
         structural_features = [self.number_of_lines(),
                                self.number_of_sentences()]
-        lexical_features = lexical_character_features + lexical_word_features + syntactic_features + structural_features
 
-        return lexical_features
+        return lexical_character_features + lexical_word_features + syntactic_features + structural_features
 
     def number_of_chars(self):
         return len(self.text)

@@ -42,13 +42,6 @@ The first option is the switch between the crawl cli and the analyze cli:
 - ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for cross-validation.
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
 
-
-
-   parser.add_argument("--dataset-path", "-p",
-                        help="The path of the dataset of the user data source. ")
-    parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be trained. ")
-
 #### Examples
 ```
 # Crawl 50 most popular users

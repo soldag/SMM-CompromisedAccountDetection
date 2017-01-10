@@ -29,8 +29,12 @@ def check():
         result = analyze_status_updates(user_status_updates, ext_status_updates, 'perceptron')
         compromised_ids = list(map(lambda x: x.id, result))
         if result:
-            return render_template('check_compromised.html', compromised_tweets = result, compromised_ids = compromised_ids, url = url)
+            return render_template('check_compromised.html', compromised_tweets=result, compromised_ids=compromised_ids, url=url)
         else:
             return render_template('check_success.html')
     else:
         return render_template('check.html')
+
+
+if __name__ == '__main__':
+    app.run()

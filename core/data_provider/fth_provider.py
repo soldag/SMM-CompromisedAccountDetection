@@ -4,6 +4,7 @@ import random
 
 from .status_update import StatusUpdate
 
+
 class FthProvider:
     DELIMITER = ';'
     DATE_FORMAT = '%Y-%m-%d%H:%M'
@@ -18,7 +19,7 @@ class FthProvider:
 
     def _parse_row(self, row):
         return StatusUpdate(
-            id=row['Tweet Id'],
+            id=int(row['Tweet Id']),
             author=row['Nickname'],
             content=row['Tweet content'],
             date_time=datetime.strptime(row['Date'] + row['Hour'],

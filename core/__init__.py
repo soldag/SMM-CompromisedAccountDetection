@@ -1,3 +1,5 @@
+from sklearn.feature_selection import VarianceThreshold
+
 from .data_provider import get_status_updates
 from .feature_extraction import extract_features, extract_features_batch
 from .training import train_classifier, create_classifier
@@ -14,6 +16,7 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
 
     # Extract features
     all_features = extract_features_batch(user_status_updates + ext_status_updates, scale=True)
+    all_features = VarianceThreshold().fit_transform(all_features).tolist()
     user_features = all_features[:len(user_status_updates)]
     ext_features = all_features[len(user_status_updates):]
 

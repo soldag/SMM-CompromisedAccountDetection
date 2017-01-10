@@ -4,7 +4,7 @@ import random
 import argparse
 import itertools
 
-from core import analyze_status_updates
+from core import analyze_status_updates, START_BATCH_SIZE
 from core.data_provider import get_status_updates
 from core.evaluation import calculate_metrics, write_evaluation_results
 
@@ -72,7 +72,7 @@ def analyze_cli(argv):
                                              args.classifier_type)
 
     # Evaluation metrics
-    tp, tn, fp, fn, prec, rec, fm, acc = calculate_metrics(user_status_updates,
+    tp, tn, fp, fn, prec, rec, fm, acc = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                                            test_tweets,
                                                            neg_predictions)
     print("TP: %i, TN: %i, FP: %i, FN: %i" % (tp, tn, fp, fn))
@@ -113,7 +113,7 @@ def evaluate_cli(argv):
                                                  args.classifier_type)
 
         # Evaluation metrics
-        metrics = calculate_metrics(user_status_updates,
+        metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                     ext_testing_status_updates,
                                     neg_predictions)
         metrics_collection.append(metrics)

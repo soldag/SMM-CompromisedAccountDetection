@@ -7,8 +7,9 @@ from .meta_data import MetaDataFeatures
 def extract_features(resource):
     writing_style_features = WritingStyleFeatures(resource.content).get_features()
     meta_data_features = MetaDataFeatures(resource).get_features()
+    features = writing_style_features + meta_data_features
 
-    return writing_style_features + meta_data_features
+    return list(map(float, features))
 
 
 def extract_features_batch(resources, scale=True):

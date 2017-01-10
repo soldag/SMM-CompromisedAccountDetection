@@ -9,22 +9,17 @@ class PerceptronClassifier:
         self.classifier = linear_model.Perceptron()
 
     def train(self, pos_samples, neg_samples):
-        pos_features = extract_features_batch(pos_samples, scale=True)
-        neg_features = extract_features_batch(neg_samples, scale=True)
-        features = pos_features + neg_features
-        labels = [True] * len(pos_features) + [False] * len(neg_features)
+        features = pos_samples + neg_samples
+        labels = [True] * len(pos_samples) + [False] * len(neg_samples)
 
         self.classifier = self.classifier.fit(features, labels)
 
     def train_iteratively(self, pos_samples, neg_samples):
-        pos_features = extract_features_batch(pos_samples, scale=True)
-        neg_features = extract_features_batch(neg_samples, scale=True)
-        features = pos_features + neg_features
-        labels = [True] * len(pos_features) + [False] * len(neg_features)
+        features = pos_samples + neg_samples
+        labels = [True] * len(pos_samples) + [False] * len(neg_samples)
 
         self.classifier = self.classifier.partial_fit(features, labels,
                                                       classes=self.classes)
 
-    def predict(self, sample):
-        features = extract_features_batch(sample, scale=True)
-        return self.classifier.predict(features).tolist()
+    def predict(self, samples):
+        return self.classifier.predict(samples).tolist()

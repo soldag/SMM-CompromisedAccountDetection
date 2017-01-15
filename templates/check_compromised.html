@@ -7,6 +7,7 @@
     <h1 class="text-center">Your account was compromised!</h1>
     <p class="text-center">
       These are the suspicious tweets. Please mark if any of these are actually yours.
+      <span>10 out of {{ result_count }} suspicious tweets are shown.</span>
     </p>
     <form>
       <input type="hidden" name="account_url" value="{{ url }}">

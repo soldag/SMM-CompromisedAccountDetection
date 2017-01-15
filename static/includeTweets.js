@@ -1,9 +1,11 @@
-window.onload = (function() {
-  var target = document.getElementById('result-block');
-  if (target) {
-    var ids = JSON.parse(target.getAttribute('data-tweet-ids'));
+'use strict';
 
-    for (id of ids) {
+window.onload = (function() {
+  let target = document.getElementById('result-block');
+  if (target) {
+    let ids = JSON.parse(target.getAttribute('data-tweet-ids').replace(/'/g, '"'));
+
+    for (let id of ids) {
       let container = document.createElement('div');
       let input = document.createElement('input');
       container.classList.add('select-tweet-container');

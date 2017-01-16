@@ -1,3 +1,5 @@
+{% set TWEET_LIMIT = 10 %}
+
 {% extends "base.html" %}
 {% block title %}Check Account{% endblock %}
 {% block head %}
@@ -6,16 +8,16 @@
 {% block content %}
     <h1 class="text-center">Your account was compromised!</h1>
     <p class="text-center">
-      These are the suspicious tweets. Please mark if any of these are actually yours.
-      <span>10 out of {{ result_count }} suspicious tweets are shown.</span>
+        These are the suspicious tweets. Please mark if any of these are actually yours.
+        <span>{{ TWEET_LIMIT }} out of {{ compromised_ids|length }} suspicious tweets are shown.</span>
     </p>
     <form>
-      <input type="hidden" name="account_url" value="{{ url }}">
-      <div id="result-block" data-tweet-ids="{{ compromised_ids }}">
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-success">Recheck</button>
-        <a class="btn btn-default" href="/check">Back</a>
-      </div>
+        <input type="hidden" name="account_url" value="{{ url }}">
+        <div id="result-block" data-tweet-ids="{{ compromised_ids[-TWEET_LIMIT:] }}">
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Recheck</button>
+            <a class="btn btn-default" href="/check">Back</a>
+        </div>
     </form>
 {% endblock %}

@@ -12,12 +12,10 @@ class MpProvider:
     def get_status_updates(self, dataset_path):
         with open(dataset_path, 'r', encoding='latin-1') as file:
             reader = csv.DictReader(file, delimiter=self.DELIMITER)
-            status_updates = []
-            for row in reader:
-                if self._parse_date(row['DATE']) is not None:
-                    status_updates.append(self._parse_row(row))
+            status_updates = [self._parse_row(row) for row in reader]
 
-            return status_updates
+            return [status_update for status_update in status_updates
+                    if status_update.date_time is not None]
 
     def _parse_row(self, row):
         return StatusUpdate(id=str(uuid.uuid4()),

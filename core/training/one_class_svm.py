@@ -1,5 +1,7 @@
 from sklearn import svm
 
+from core.utils import flatten
+
 
 class OneClassSvmClassifier:
     def __init__(self):
@@ -21,3 +23,6 @@ class OneClassSvmClassifier:
 
     def predict(self, samples):
         return [p == 1 for p in self.classifier.predict(samples)]
+
+    def get_scores(self, samples):
+        return flatten(self.classifier.decision_function(samples).tolist())

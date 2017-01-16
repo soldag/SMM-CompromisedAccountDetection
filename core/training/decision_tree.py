@@ -27,3 +27,6 @@ class DecisionTreeClassifier:
 
     def predict(self, samples):
         return self.classifier.predict(samples).tolist()
+
+    def get_scores(self, samples):
+        return self.classifier.predict_proba(samples)[:,0].tolist()

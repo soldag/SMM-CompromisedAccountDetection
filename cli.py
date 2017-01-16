@@ -69,10 +69,10 @@ def analyze_cli(argv):
     print("Analyzing status updates...")
     test_tweets = random.sample(ext_status_updates, 100)
     status_updates = user_status_updates + test_tweets
-    neg_predictions = analyze_status_updates(status_updates,
-                                             ext_status_updates,
-                                             args.classifier_type,
-                                             args.scale_features)
+    neg_predictions, scores = analyze_status_updates(status_updates,
+                                                     ext_status_updates,
+                                                     args.classifier_type,
+                                                     args.scale_features)
 
     # Evaluation metrics
     tp, tn, fp, fn, prec, rec, fm, acc = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
@@ -113,10 +113,10 @@ def evaluate_cli(argv):
         ext_testing_status_updates = list(itertools.chain(*[x[n_ext:n_ext*2] for x in ext_status_updates]))
 
         # Run classifier
-        neg_predictions = analyze_status_updates(user_status_updates + ext_testing_status_updates,
-                                                 ext_training_status_updates,
-                                                 args.classifier_type,
-                                                 args.scale_features)
+        neg_predictions, scores = analyze_status_updates(user_status_updates + ext_testing_status_updates,
+                                                         ext_training_status_updates,
+                                                         args.classifier_type,
+                                                         args.scale_features)
 
         # Evaluation metrics
         metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],

@@ -21,3 +21,6 @@ class PerceptronClassifier:
 
     def predict(self, samples):
         return self.classifier.predict(samples).tolist()
+
+    def get_scores(self, samples, normalize=True):
+        return self.classifier.decision_function(samples).tolist()

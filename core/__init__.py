@@ -59,7 +59,11 @@ def analyze_status_updates(user_status_updates, ext_status_updates,
             start = end
             end = start + safe_zone_length
 
-    return [user_status_updates[i] for i in suspected_indices]
+    # Calculate prediction scores for suspected status updates
+    suspected_status_updates = [user_status_updates[i] for i in suspected_indices]
+    suspected_scores = classifier.get_scores([user_features[i] for i in suspected_indices])
+
+    return suspected_status_updates, suspected_scores
 
 
 def _index(iterable, value, default_value=None):

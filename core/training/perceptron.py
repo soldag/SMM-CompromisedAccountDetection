@@ -4,7 +4,7 @@ from sklearn import linear_model
 class PerceptronClassifier:
     def __init__(self):
         self.classes = [True, False]
-        self.classifier = linear_model.Perceptron()
+        self.classifier = linear_model.Perceptron(penalty="l1", alpha=0.0008)
 
     def train(self, pos_samples, neg_samples):
         features = pos_samples + neg_samples

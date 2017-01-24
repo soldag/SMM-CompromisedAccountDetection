@@ -7,6 +7,7 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     <script sync src="https://platform.twitter.com/widgets.js"></script>
     <script src="{{ url_for('static',filename='includeTweets.js') }}"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>{% block title %}{% endblock %} - Compromised Account Detector</title>
     {% endblock %}
 </head>

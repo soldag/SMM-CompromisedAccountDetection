@@ -11,8 +11,8 @@
         These are the suspicious tweets. Please mark if any of these are actually yours.
         <span>{{ [suspected_ids|length, TWEET_LIMIT] | min }} out of {{ suspected_ids|length }} suspicious tweets are shown.</span>
     </p>
-    <form>
-        <input type="hidden" name="account_url" value="{{ url }}">
+    <form method="post">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="hidden" name="sid" value="{{ sid }}">
         <div id="result-block" data-tweet-ids="{{ suspected_ids[-TWEET_LIMIT:] }}">
         </div>

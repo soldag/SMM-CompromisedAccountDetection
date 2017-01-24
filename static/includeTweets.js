@@ -12,7 +12,7 @@ window.onload = (function() {
 
       input.type = 'checkbox';
       input.value = id;
-      input.name = 'select-tweet-checkbox';
+      input.name = 'confident_tweet_id';
       input.classList.add('select-tweet-checkbox');
       
       twttr.widgets.createTweet(

@@ -5,13 +5,13 @@
 {% endblock %}
 {% block content %}
     <h1 class="text-center">Check if your account was compromised</h1>
-    <form method="get">
+    <form method="post">
       <div class="col-md-12 text-center input--url">
-        <label for="account_url" class="col-md-12">Account URL:</label>
-        <input type="url" name="account_url" id="account_url" value="https://twitter.com/sebastian_kliem" size="50" class="transparent col-md-12 text-center" />
+        <label for="user_id" class="col-md-12">Twitter user:</label>
+        <input type="text" name="user_id" id="user_id" value="sebastian_kliem" size="50" class="transparent col-md-12 text-center" autocomplete="off" />
       </div>
       <div class="col-md-12 text-center">
-        <button type="submit" value="Submit" class="btn btn-success">Submit</button>
+        <button type="submit" value="Submit" class="btn btn-success">Check</button>
         <button type="reset" value="Reset" class="btn btn-default">Reset</button>
       </div>
     </form>

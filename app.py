@@ -1,60 +1,45 @@
-from flask import Flask
-from flask import request
-from flask import render_template
+from flask import Flask, request, render_template, redirect, url_for
 
 import uuid
 import random
-import urllib.parse as url_parser
 from expiringdict import ExpiringDict
 
 from core.data_provider import get_status_updates
 from core import StatusUpdateAnalyzer
 
-CLASSIFIER_TYPE = 'perceptron'
+CLASSIFIER_TYPE = "perceptron"
 SCALE_FEATURES = True
+EXT_TYPE = "fth"
+EXT_PATH = "data/follow_the_hashtag_usa.csv"
+FOREIGN_USER_ID = "steppschuh192"
 
 app = Flask(__name__)
 session_cache = ExpiringDict(10, 600)
 
 
-@app.route('/check/', methods=['GET'])
-def check():
-    # Get query parameter
-    sid = request.args.get('sid')
-    user_url = request.args.get('account_url')
-    confident_tweet_ids = request.args.getlist('select-tweet-checkbox')
+@app.route("/", methods=["GET"])
+@app.route("/check/", methods=["GET"])
+def index():
+    return render_template("check.html")
 
-    if not user_url:
-        return render_template('check.html')
 
-    if not sid or not confident_tweet_ids:
-        # Retrieve status updates
-        parsed_url = url_parser.urlparse(user_url)
-        user_id = parsed_url.path.split('/')[1]
-        user_status_updates = get_status_updates('twitter', user_id=user_id)
-        ext_status_updates = get_status_updates('fth', dataset_path="data/follow_the_hashtag_usa.csv")
+@app.route("/check/", methods=["POST"])
+def check_redirect():
+    user_id = request.values.get("user_id")
+    return redirect(url_for("check", user_id=user_id))
 
-        # Add some tweets from another user for testing purposes
-        foreign_tweets = get_status_updates('twitter', user_id='steppschuh192')
-        test_tweets = random.sample(foreign_tweets, 100)
-        user_status_updates += test_tweets
 
-        # Analyze tweets
-        analyzer = StatusUpdateAnalyzer(user_status_updates,
-                                        ext_status_updates,
-                                        CLASSIFIER_TYPE,
-                                        SCALE_FEATURES)
-        result = analyzer.analyze()
+@app.route("/check/<user_id>", methods=["GET", "POST"])
+def check(user_id):
+    # Get form data
+    sid = request.values.get("sid")
+    confident_tweet_ids = request.values.getlist("confident_tweet_id")
+
+    # Run analyzer
+    if sid and confident_tweet_ids:
+        analyzer, result = refine(sid, confident_tweet_ids)
     else:
-        # Restore session from cache
-        analyzer, result = session_cache[sid]
-        suspected_tweets = list(zip(*result))[0]
-
-        # Refine model
-        confident_tweet_ids = list(map(int, confident_tweet_ids))
-        confident_tweets = [tweet for tweet in suspected_tweets
-                            if tweet.id in confident_tweet_ids]
-        result = analyzer.refine(suspected_tweets, confident_tweets)
+        analyzer, result = analyze(user_id)
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
@@ -64,18 +49,52 @@ def check():
     if result:
         suspected_tweets = [x for (x, y) in sorted(result, key=lambda x: x[1])]
         suspected_ids = [str(x.id) for x in suspected_tweets]
-        return render_template('check_compromised.html',
+        return render_template("check_compromised.html",
                                suspected_ids=suspected_ids,
-                               url=user_url,
+                               user_id=user_id,
                                sid=sid)
     else:
-        return render_template('check_success.html')
+        return render_template("check_success.html")
 
 
-@app.template_filter('min')
+def analyze(user_id):
+    # Retrieve status updates
+    user_status_updates = get_status_updates("twitter", user_id=user_id)
+    ext_status_updates = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
+
+    # Add some tweets from another user for testing purposes
+    foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
+    test_tweets = random.sample(foreign_tweets, 100)
+    user_status_updates += test_tweets
+
+    # Analyze tweets
+    analyzer = StatusUpdateAnalyzer(user_status_updates,
+                                    ext_status_updates,
+                                    CLASSIFIER_TYPE,
+                                    SCALE_FEATURES)
+    result = analyzer.analyze()
+
+    return analyzer, result
+
+
+def refine(sid, confident_tweet_ids):
+    # Restore session from cache
+    analyzer, result = session_cache[sid]
+    suspected_tweets = list(zip(*result))[0]
+
+    # Refine model
+    confident_tweet_ids = list(map(int, confident_tweet_ids))
+    confident_tweets = [tweet for tweet in suspected_tweets
+                        if tweet.id in confident_tweet_ids]
+    result = analyzer.refine(suspected_tweets, confident_tweets)
+
+    return analyzer, result
+
+
+@app.template_filter("min")
 def min_filter(l):
     return min(l)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

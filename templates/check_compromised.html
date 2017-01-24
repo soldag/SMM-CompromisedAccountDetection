@@ -9,11 +9,12 @@
     <h1 class="text-center">Your account was compromised!</h1>
     <p class="text-center">
         These are the suspicious tweets. Please mark if any of these are actually yours.
-        <span>{{ TWEET_LIMIT }} out of {{ compromised_ids|length }} suspicious tweets are shown.</span>
+        <span>{{ [suspected_ids|length, TWEET_LIMIT] | min }} out of {{ suspected_ids|length }} suspicious tweets are shown.</span>
     </p>
     <form>
         <input type="hidden" name="account_url" value="{{ url }}">
-        <div id="result-block" data-tweet-ids="{{ compromised_ids[-TWEET_LIMIT:] }}">
+        <input type="hidden" name="sid" value="{{ sid }}">
+        <div id="result-block" data-tweet-ids="{{ suspected_ids[-TWEET_LIMIT:] }}">
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success">Recheck</button>

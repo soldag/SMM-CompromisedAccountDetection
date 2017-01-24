@@ -2,24 +2,32 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
-from core.data_provider import get_status_updates
-from core import analyze_status_updates
-
-import urllib.parse as url_parser
+import uuid
 import random
-import json
+import urllib.parse as url_parser
+from expiringdict import ExpiringDict
+
+from core.data_provider import get_status_updates
+from core import StatusUpdateAnalyzer
+
+CLASSIFIER_TYPE = 'perceptron'
+SCALE_FEATURES = True
 
 app = Flask(__name__)
+session_cache = ExpiringDict(10, 600)
 
 
 @app.route('/check/', methods=['GET'])
 def check():
-    user_url = request.args.get('account_url', '')
-    if user_url:
-        # Get ids of corrected tweets from query params
-        corrected_tweets_ids = request.args.getlist('select-tweet-checkbox')
-        print(corrected_tweets_ids)
+    # Get query parameter
+    sid = request.args.get('sid')
+    user_url = request.args.get('account_url')
+    confident_tweet_ids = request.args.getlist('select-tweet-checkbox')
 
+    if not user_url:
+        return render_template('check.html')
+
+    if not sid or not confident_tweet_ids:
         # Retrieve status updates
         parsed_url = url_parser.urlparse(user_url)
         user_id = parsed_url.path.split('/')[1]
@@ -32,19 +40,41 @@ def check():
         user_status_updates += test_tweets
 
         # Analyze tweets
-        compromised_tweets, scores = analyze_status_updates(user_status_updates, ext_status_updates, 'perceptron')
-        compromised_tweets = [x for (y, x) in sorted(zip(scores, compromised_tweets))]
-
-        # Render template depending on result
-        if compromised_tweets:
-            compromised_ids = [str(x.id) for x in compromised_tweets]
-            return render_template('check_compromised.html',
-                                   compromised_ids=compromised_ids,
-                                   url=user_url)
-        else:
-            return render_template('check_success.html')
+        analyzer = StatusUpdateAnalyzer(user_status_updates,
+                                        ext_status_updates,
+                                        CLASSIFIER_TYPE,
+                                        SCALE_FEATURES)
+        result = analyzer.analyze()
     else:
-        return render_template('check.html')
+        # Restore session from cache
+        analyzer, result = session_cache[sid]
+        suspected_tweets = list(zip(*result))[0]
+
+        # Refine model
+        confident_tweet_ids = list(map(int, confident_tweet_ids))
+        confident_tweets = [tweet for tweet in suspected_tweets
+                            if tweet.id in confident_tweet_ids]
+        result = analyzer.refine(suspected_tweets, confident_tweets)
+
+    # Store result in cache
+    sid = sid or str(uuid.uuid4())
+    session_cache[sid] = (analyzer, result)
+
+    # Render template depending on result
+    if result:
+        suspected_tweets = [x for (x, y) in sorted(result, key=lambda x: x[1])]
+        suspected_ids = [str(x.id) for x in suspected_tweets]
+        return render_template('check_compromised.html',
+                               suspected_ids=suspected_ids,
+                               url=user_url,
+                               sid=sid)
+    else:
+        return render_template('check_success.html')
+
+
+@app.template_filter('min')
+def min_filter(l):
+    return min(l)
 
 
 if __name__ == '__main__':

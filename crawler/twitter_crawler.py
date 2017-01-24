@@ -20,7 +20,7 @@ def crawl_status_updates(output_path, user_limit=100, limit=0):
             if tweets:
                 # Write header to csv, if not already done
                 if not csv_writer.fieldnames:
-                    csv_writer.fieldnames = tweets[0].to_dict().keys()
+                    csv_writer.fieldnames = sorted(tweets[0].to_dict().keys())
                     csv_writer.writeheader()
 
                 # Write tweets to csv

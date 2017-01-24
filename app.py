@@ -14,7 +14,7 @@ EXT_PATH = "data/follow_the_hashtag_usa.csv"
 FOREIGN_USER_ID = "steppschuh192"
 
 app = Flask(__name__)
-session_cache = ExpiringDict(10, 600)
+session_cache = ExpiringDict(10, 1200)
 
 
 @app.route("/", methods=["GET"])
@@ -35,19 +35,25 @@ def check(user_id):
     sid = request.values.get("sid")
     confident_tweet_ids = request.values.getlist("confident_tweet_id")
 
-    # Run analyzer
-    if sid and confident_tweet_ids:
-        analyzer, result = refine(sid, confident_tweet_ids)
+    # Get results
+    if sid and sid in session_cache:
+        # Restore session from cache
+        analyzer, result = session_cache[sid]
     else:
+        # Run analyzer
         analyzer, result = analyze(user_id)
+
+    # Refine model, if confident tweets are provided
+    suspected_tweets = list(zip(*result))[0]
+    if confident_tweet_ids:
+        result = refine(analyzer, suspected_tweets, confident_tweet_ids)
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
     session_cache[sid] = (analyzer, result)
 
     # Render template depending on result
-    if result:
-        suspected_tweets = [x for (x, y) in sorted(result, key=lambda x: x[1])]
+    if suspected_tweets:
         suspected_ids = [str(x.id) for x in suspected_tweets]
         return render_template("check_compromised.html",
                                suspected_ids=suspected_ids,
@@ -77,18 +83,13 @@ def analyze(user_id):
     return analyzer, result
 
 
-def refine(sid, confident_tweet_ids):
-    # Restore session from cache
-    analyzer, result = session_cache[sid]
-    suspected_tweets = list(zip(*result))[0]
-
-    # Refine model
+def refine(analyzer, suspected_tweets, confident_tweet_ids):
     confident_tweet_ids = list(map(int, confident_tweet_ids))
     confident_tweets = [tweet for tweet in suspected_tweets
                         if tweet.id in confident_tweet_ids]
     result = analyzer.refine(suspected_tweets, confident_tweets)
 
-    return analyzer, result
+    return result
 
 
 @app.template_filter("min")

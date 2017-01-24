@@ -44,9 +44,10 @@ def check(user_id):
         analyzer, result = analyze(user_id)
 
     # Refine model, if confident tweets are provided
-    suspected_tweets = list(zip(*result))[0]
+    suspected_tweets = sorted_suspected_tweets(result)
     if confident_tweet_ids:
         result = refine(analyzer, suspected_tweets, confident_tweet_ids)
+        suspected_tweets = sorted_suspected_tweets(result)
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
@@ -90,6 +91,10 @@ def refine(analyzer, suspected_tweets, confident_tweet_ids):
     result = analyzer.refine(suspected_tweets, confident_tweets)
 
     return result
+
+
+def sorted_suspected_tweets(result):
+    return [x for (x, y) in sorted(result, key=lambda x: x[1])]
 
 
 @app.template_filter("min")

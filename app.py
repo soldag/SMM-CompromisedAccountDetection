@@ -1,8 +1,8 @@
-from flask import Flask, request, render_template, redirect, url_for
-
 import uuid
 import random
 from expiringdict import ExpiringDict
+from flask import Flask, request, render_template, redirect, url_for
+
 
 from core.data_provider import get_status_updates
 from core import StatusUpdateAnalyzer
@@ -38,26 +38,24 @@ def check(user_id):
     # Get results
     if sid and sid in session_cache:
         # Restore session from cache
-        analyzer, result = session_cache[sid]
+        analyzer = session_cache[sid]
     else:
         # Run analyzer
-        analyzer, result = analyze(user_id)
+        analyzer = analyze(user_id)
 
     # Refine model, if confident tweets are provided
-    suspected_tweets = sorted_suspected_tweets(result)
     if confident_tweet_ids:
-        result = refine(analyzer, suspected_tweets, confident_tweet_ids)
-        suspected_tweets = sorted_suspected_tweets(result)
+        refine(analyzer, analyzer.suspicious_statuses, confident_tweet_ids)
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
-    session_cache[sid] = (analyzer, result)
+    session_cache[sid] = analyzer
 
     # Render template depending on result
-    if suspected_tweets:
-        suspected_ids = [str(x.id) for x in suspected_tweets]
+    if analyzer.suspicious_statuses:
+        suspicious_ids = [str(x.id) for x in analyzer.suspicious_statuses]
         return render_template("check_compromised.html",
-                               suspected_ids=suspected_ids,
+                               suspicious_ids=suspicious_ids,
                                user_id=user_id,
                                sid=sid)
     else:
@@ -79,22 +77,18 @@ def analyze(user_id):
                                     ext_status_updates,
                                     CLASSIFIER_TYPE,
                                     SCALE_FEATURES)
-    result = analyzer.analyze()
+    analyzer.analyze()
 
-    return analyzer, result
+    return analyzer
 
 
-def refine(analyzer, suspected_tweets, confident_tweet_ids):
+def refine(analyzer, suspicious_tweets, confident_tweet_ids):
     confident_tweet_ids = list(map(int, confident_tweet_ids))
-    confident_tweets = [tweet for tweet in suspected_tweets
+    confident_tweets = [tweet for tweet in suspicious_tweets
                         if tweet.id in confident_tweet_ids]
-    result = analyzer.refine(suspected_tweets, confident_tweets)
-
-    return result
-
-
-def sorted_suspected_tweets(result):
-    return [x for (x, y) in sorted(result, key=lambda x: x[1])]
+    confident_tweets_false = [tweet for tweet in suspicious_tweets[:10]
+                              if tweet.id not in confident_tweet_ids]
+    analyzer.refine(confident_tweets, confident_tweets_false)
 
 
 @app.template_filter("min")

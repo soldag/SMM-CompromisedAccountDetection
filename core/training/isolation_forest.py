@@ -8,15 +8,15 @@ class IsolationForestClassifier:
         self.pos_weights = []
         self.classifier = IsolationForest()
 
-    def train(self, pos_samples, neg_samples, pos_weights=None):
+    def train(self, pos_samples, neg_samples, weight=1):
         self.pos_features = pos_samples
-        self.weights = pos_weights or [1] * len(pos_samples)
+        self.pos_weights = [weight] * len(pos_samples)
 
         self._train()
 
-    def train_iteratively(self, pos_samples, neg_samples, pos_weights=None):
+    def train_iteratively(self, pos_samples, neg_samples, weight=1):
         self.pos_features += pos_samples
-        self.pos_weights += pos_weights or [1] * len(pos_samples)
+        self.pos_weights += [weight] * len(pos_samples)
 
         self._train()
 

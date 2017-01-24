@@ -103,8 +103,11 @@ def evaluate_cli(argv):
     grouped_status_updates = [list(g) for k, g in itertools.groupby(status_updates, lambda x: x.author)]
     n_user = 500
     n_ext = math.ceil(n_user / (len(grouped_status_updates) - 1))
-    metrics_collection = []
+    evaluation_data = {}
     for i in range(len(grouped_status_updates)):
+        user = grouped_status_updates[i][0].author
+        print("Analyzing @%s (%s/%s)" % (user, i + 1, len(grouped_status_updates)))
+
         # Construct test & training sets
         user_status_updates = grouped_status_updates[i][:n_user]
         ext_status_updates = [x for j, x in enumerate(grouped_status_updates) if j != i]
@@ -121,13 +124,14 @@ def evaluate_cli(argv):
         metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                     ext_testing_status_updates,
                                     neg_predictions)
-        metrics_collection.append(metrics)
+        evaluation_data[user] = metrics
 
         tp, tn, fp, fn, prec, rec, fm, acc = metrics
         print("TP: %i, TN: %i, FP: %i, FN: %i" % (tp, tn, fp, fn))
         print("Prec: %.2f, Rec: %.2f, F: %.2f, Acc: %.2f" % (prec, rec, fm, acc))
+        print()
 
-    write_evaluation_results(metrics_collection)
+    write_evaluation_results(evaluation_data)
 
 
 if __name__ == "__main__":

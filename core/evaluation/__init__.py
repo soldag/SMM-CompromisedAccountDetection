@@ -35,9 +35,9 @@ def write_evaluation_results(data):
     row += 1
 
     # Iterate over the data and write it out row by row.
-    for i in range(len(data)):
-        tp, tn, fp, fn, prec, rec, fm, acc = data[i]
-        worksheet.write(row, col, i)
+    for user, metrics in data.items():
+        tp, tn, fp, fn, prec, rec, fm, acc = metrics
+        worksheet.write(row, col, user)
         worksheet.write(row, col + 1, tp)
         worksheet.write(row, col + 2, tn)
         worksheet.write(row, col + 3, fp)

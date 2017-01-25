@@ -12,6 +12,7 @@ SCALE_FEATURES = True
 EXT_TYPE = "fth"
 EXT_PATH = "data/follow_the_hashtag_usa.csv"
 FOREIGN_USER_ID = "steppschuh192"
+SHOWN_TWEETS_LIMIT = 10
 
 app = Flask(__name__)
 session_cache = ExpiringDict(10, 1200)
@@ -57,7 +58,8 @@ def check(user_id):
         return render_template("check_compromised.html",
                                sid=sid,
                                user_id=user_id,
-                               suspicious_ids=suspicious_ids,
+                               num_total=len(suspicious_ids),
+                               suspicious_ids=suspicious_ids[:SHOWN_TWEETS_LIMIT],
                                can_refine=analyzer.can_refine)
     else:
         return render_template("check_success.html")
@@ -85,16 +87,11 @@ def analyze(user_id):
 
 def refine(analyzer, suspicious_tweets, confident_tweet_ids):
     confident_tweet_ids = list(map(int, confident_tweet_ids))
-    confident_tweets = [tweet for tweet in suspicious_tweets
-                        if tweet.id in confident_tweet_ids]
-    confident_tweets_false = [tweet for tweet in suspicious_tweets[:10]
+    confident_true_tweets = [tweet for tweet in suspicious_tweets
+                             if tweet.id in confident_tweet_ids]
+    confident_false_tweets = [tweet for tweet in suspicious_tweets[:SHOWN_TWEETS_LIMIT]
                               if tweet.id not in confident_tweet_ids]
-    analyzer.refine(confident_tweets, confident_tweets_false)
-
-
-@app.template_filter("min")
-def min_filter(l):
-    return min(l)
+    analyzer.refine(confident_true_tweets, confident_false_tweets)
 
 
 if __name__ == "__main__":

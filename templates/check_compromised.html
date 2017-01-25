@@ -1,5 +1,3 @@
-{% set TWEET_LIMIT = 10 %}
-
 {% extends "base.html" %}
 {% block title %}Check Account{% endblock %}
 {% block head %}
@@ -8,13 +6,13 @@
 {% block content %}
     <h1 class="text-center">Your account was compromised!</h1>
     <p class="text-center">
-        These are the suspicious tweets. Please mark if any of these are actually yours.
-        <span>{{ [suspicious_ids|length, TWEET_LIMIT] | min }} out of {{ suspicious_ids|length }} suspicious tweets are shown.</span>
+        {{ num_total }} suspicious tweets were detected. The {{ suspicious_ids | length }} most suspicious ones are shown below. <br />
+        You can refine the analysis by selecting those tweets which are actually yours.
     </p>
     <form method="post">
         <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="hidden" name="sid" value="{{ sid }}">
-        <div id="result-block" data-tweet-ids="{{ suspicious_ids[:TWEET_LIMIT] }}">
+        <div id="result-block" data-tweet-ids="{{ suspicious_ids }}">
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success" {% if not can_refine %}disabled{% endif %}>Refine</button>

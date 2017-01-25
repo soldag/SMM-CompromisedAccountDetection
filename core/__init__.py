@@ -37,6 +37,12 @@ class StatusUpdateAnalyzer:
     def suspicious_statuses(self):
         return [x for (x, y) in sorted(self.result, key=lambda x: x[1])]
 
+    @property
+    def can_refine(self):
+        suspicious_ids = set(x.id for x in self.suspicious_statuses)
+        confident_false_ids = set(x.id for x in self.confident_false_statuses)
+        return suspicious_ids != confident_false_ids
+
     def analyze(self):
         start = 0
         end = START_BATCH_SIZE

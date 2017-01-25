@@ -55,9 +55,10 @@ def check(user_id):
     if analyzer.suspicious_statuses:
         suspicious_ids = [str(x.id) for x in analyzer.suspicious_statuses]
         return render_template("check_compromised.html",
-                               suspicious_ids=suspicious_ids,
+                               sid=sid,
                                user_id=user_id,
-                               sid=sid)
+                               suspicious_ids=suspicious_ids,
+                               can_refine=analyzer.can_refine)
     else:
         return render_template("check_success.html")
 

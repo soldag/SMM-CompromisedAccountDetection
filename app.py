@@ -43,8 +43,8 @@ def check(user_id):
     if sid and sid in session_cache:
         # Restore session from cache
         session = session_cache[sid]
-        analyzer = session.analyzer
-        demo_mode = session.demo_mode
+        analyzer = session['analyzer']
+        demo_mode = session['demo_mode']
     else:
         # Run analyzer
         analyzer = analyze(user_id, demo_mode)
@@ -56,8 +56,8 @@ def check(user_id):
     # Store result in cache
     sid = sid or str(uuid.uuid4())
     session_cache[sid] = {
-        analyzer: analyzer,
-        demo_mode: demo_mode
+        'analyzer': analyzer,
+        'demo_mode': demo_mode
     }
 
     # Render template depending on result

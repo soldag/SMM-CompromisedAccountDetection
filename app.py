@@ -76,9 +76,8 @@ def analyze(user_id, mix_foreign):
     # Add some tweets from another user for testing purposes
     if mix_foreign:
         foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
-        test_tweets = random.sample(foreign_tweets, 100)
-        user_status_updates = user_status_updates[:START_BATCH_SIZE] + \
-                              random_insert_seq(user_status_updates[START_BATCH_SIZE:], test_tweets)
+        mixed_status_updates, seq = random_insert_seq(user_status_updates[START_BATCH_SIZE:], foreign_tweets)
+        user_status_updates = user_status_updates[:START_BATCH_SIZE] + mixed_status_updates
 
     # Analyze tweets
     analyzer = StatusUpdateAnalyzer(user_status_updates,

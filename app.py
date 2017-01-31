@@ -27,7 +27,9 @@ def index():
 @app.route("/check/", methods=["POST"])
 def check_redirect():
     user_id = request.values.get("user_id")
-    return redirect(url_for("check", user_id=user_id))
+    demo = request.values.get("demo")
+
+    return redirect(url_for("check", user_id=user_id, demo=demo))
 
 
 @app.route("/check/<user_id>", methods=["GET", "POST"])
@@ -35,14 +37,14 @@ def check(user_id):
     # Get form data
     sid = request.values.get("sid")
     confident_tweet_ids = request.values.getlist("confident_tweet_id")
-    demo_mode = request.values.get("demo", False)
-    if demo_mode is not False:
-        demo_mode = True
+    demo_mode = request.values.get("demo") == '1'
 
     # Get results
     if sid and sid in session_cache:
         # Restore session from cache
-        analyzer = session_cache[sid]
+        session = session_cache[sid]
+        analyzer = session.analyzer
+        demo_mode = session.demo_mode
     else:
         # Run analyzer
         analyzer = analyze(user_id, demo_mode)
@@ -53,7 +55,10 @@ def check(user_id):
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
-    session_cache[sid] = analyzer
+    session_cache[sid] = {
+        analyzer: analyzer,
+        demo_mode: demo_mode
+    }
 
     # Render template depending on result
     if analyzer.suspicious_statuses:
@@ -61,11 +66,13 @@ def check(user_id):
         return render_template("check_compromised.html",
                                sid=sid,
                                user_id=user_id,
+                               demo_mode=demo_mode,
                                num_total=len(suspicious_ids),
                                suspicious_ids=suspicious_ids[:SHOWN_TWEETS_LIMIT],
                                can_refine=analyzer.can_refine)
     else:
-        return render_template("check_success.html")
+        return render_template("check_success.html",
+                               demo_mode=demo_mode)
 
 
 def analyze(user_id, mix_foreign):

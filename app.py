@@ -3,9 +3,9 @@ import random
 from expiringdict import ExpiringDict
 from flask import Flask, request, render_template, redirect, url_for
 
-
+from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
-from core import StatusUpdateAnalyzer
+from core.utils import random_insert_seq
 
 CLASSIFIER_TYPE = "perceptron"
 SCALE_FEATURES = True
@@ -73,7 +73,8 @@ def analyze(user_id):
     # Add some tweets from another user for testing purposes
     foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
     test_tweets = random.sample(foreign_tweets, 100)
-    user_status_updates += test_tweets
+    user_status_updates = user_status_updates[:START_BATCH_SIZE] + \
+        random_insert_seq(user_status_updates[START_BATCH_SIZE:], test_tweets)
 
     # Analyze tweets
     analyzer = StatusUpdateAnalyzer(user_status_updates,

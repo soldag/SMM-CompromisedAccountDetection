@@ -7,9 +7,9 @@ import itertools
 from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
 from core.evaluation import calculate_metrics, write_evaluation_results
+from core.utils import random_insert_seq
 
 from crawler import crawl_status_updates
-from random import randrange, sample
 
 
 def crawl_cli(argv):
@@ -69,7 +69,7 @@ def analyze_cli(argv):
     # Analyze status updates
     print("Analyzing status updates...")
     test_tweets = random.sample(ext_status_updates, 100)
-    status_updates = user_status_updates + test_tweets
+    status_updates = user_status_updates[:START_BATCH_SIZE] + random_insert_seq(user_status_updates[START_BATCH_SIZE:], test_tweets)
     analyzer = StatusUpdateAnalyzer(status_updates, ext_status_updates,
                                    args.classifier_type, args.scale_features)
     analyzer.analyze()
@@ -136,15 +136,6 @@ def evaluate_cli(argv):
         print()
 
     write_evaluation_results(evaluation_data)
-
-
-def random_insert_seq(lst, seq):
-    insert_locations = sample(range(len(lst) + len(seq)), len(seq))
-    inserts = dict(zip(insert_locations, seq))
-    input = iter(lst)
-    lst[:] = [inserts[pos] if pos in inserts else next(input)
-              for pos in range(len(lst) + len(seq))]
-    return lst
 
 
 if __name__ == "__main__":

@@ -71,12 +71,12 @@ def analyze_cli(argv):
     status_updates = user_status_updates + test_tweets
     analyzer = StatusUpdateAnalyzer(status_updates, ext_status_updates,
                                    args.classifier_type, args.scale_features)
-    neg_predictions, scores = list(zip(*analyzer.analyze()))
+    analyzer.analyze()
 
     # Evaluation metrics
     tp, tn, fp, fn, prec, rec, fm, acc = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                                            test_tweets,
-                                                           neg_predictions)
+                                                           analyzer.suspicious_statuses)
     print("TP: %i, TN: %i, FP: %i, FN: %i" % (tp, tn, fp, fn))
     print("Prec: %.2f, Rec: %.2f, F: %.2f, Acc: %.2f" % (prec, rec, fm, acc))
 
@@ -118,12 +118,12 @@ def evaluate_cli(argv):
         analyzer = StatusUpdateAnalyzer(user_status_updates + ext_testing_status_updates,
                                         ext_training_status_updates,
                                         args.classifier_type, args.scale_features)
-        neg_predictions, scores = list(zip(*analyzer.analyze()))
+        analyzer.analyze()
 
         # Evaluation metrics
         metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                     ext_testing_status_updates,
-                                    neg_predictions)
+                                    analyzer.suspicious_statuses)
         evaluation_data[user] = metrics
 
         tp, tn, fp, fn, prec, rec, fm, acc = metrics

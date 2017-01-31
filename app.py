@@ -35,6 +35,9 @@ def check(user_id):
     # Get form data
     sid = request.values.get("sid")
     confident_tweet_ids = request.values.getlist("confident_tweet_id")
+    demo_mode = request.values.get("demo", False)
+    if demo_mode is not False:
+        demo_mode = True
 
     # Get results
     if sid and sid in session_cache:
@@ -42,7 +45,7 @@ def check(user_id):
         analyzer = session_cache[sid]
     else:
         # Run analyzer
-        analyzer = analyze(user_id)
+        analyzer = analyze(user_id, demo_mode)
 
     # Refine model, if confident tweets are provided
     if confident_tweet_ids:
@@ -65,16 +68,17 @@ def check(user_id):
         return render_template("check_success.html")
 
 
-def analyze(user_id):
+def analyze(user_id, mix_foreign):
     # Retrieve status updates
     user_status_updates = get_status_updates("twitter", user_id=user_id)
     ext_status_updates = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
 
     # Add some tweets from another user for testing purposes
-    foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
-    test_tweets = random.sample(foreign_tweets, 100)
-    user_status_updates = user_status_updates[:START_BATCH_SIZE] + \
-        random_insert_seq(user_status_updates[START_BATCH_SIZE:], test_tweets)
+    if mix_foreign:
+        foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
+        test_tweets = random.sample(foreign_tweets, 100)
+        user_status_updates = user_status_updates[:START_BATCH_SIZE] + \
+                              random_insert_seq(user_status_updates[START_BATCH_SIZE:], test_tweets)
 
     # Analyze tweets
     analyzer = StatusUpdateAnalyzer(user_status_updates,

@@ -1,7 +1,7 @@
 from nltk.util import ngrams
 from nltk import word_tokenize
 from collections import Counter
-import re
+# import re
 
 
 def extract_n_grams(resources):

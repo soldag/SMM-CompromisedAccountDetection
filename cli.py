@@ -9,6 +9,7 @@ from core.data_provider import get_status_updates
 from core.evaluation import calculate_metrics, write_evaluation_results
 
 from crawler import crawl_status_updates
+from random import randrange, sample
 
 
 def crawl_cli(argv):
@@ -115,7 +116,10 @@ def evaluate_cli(argv):
         ext_testing_status_updates = list(itertools.chain(*[x[n_ext:n_ext*2] for x in ext_status_updates]))
 
         # Run classifier
-        analyzer = StatusUpdateAnalyzer(user_status_updates + ext_testing_status_updates,
+        safe_user_status_updates = user_status_updates[:START_BATCH_SIZE]
+        mixed_user_status_updates = random_insert_seq(user_status_updates[START_BATCH_SIZE:], ext_testing_status_updates)
+
+        analyzer = StatusUpdateAnalyzer(safe_user_status_updates + mixed_user_status_updates,
                                         ext_training_status_updates,
                                         args.classifier_type, args.scale_features)
         analyzer.analyze()
@@ -132,6 +136,15 @@ def evaluate_cli(argv):
         print()
 
     write_evaluation_results(evaluation_data)
+
+
+def random_insert_seq(lst, seq):
+    insert_locations = sample(range(len(lst) + len(seq)), len(seq))
+    inserts = dict(zip(insert_locations, seq))
+    input = iter(lst)
+    lst[:] = [inserts[pos] if pos in inserts else next(input)
+              for pos in range(len(lst) + len(seq))]
+    return lst
 
 
 if __name__ == "__main__":

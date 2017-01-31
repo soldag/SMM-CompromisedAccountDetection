@@ -1,14 +1,17 @@
 from nltk.util import ngrams
 from nltk import word_tokenize
 from collections import Counter
+import re
 
 
 def extract_n_grams(resources):
     c_grams = []
     w_grams = []
     for resource in resources:
-        c_grams += NGramFeatures(resource.content).get_character_grams()
-        w_grams += NGramFeatures(resource.content).get_word_grams()
+        # content = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', resource.content)
+        content = resource.content
+        c_grams += NGramFeatures(content).get_character_grams()
+        w_grams += NGramFeatures(content).get_word_grams()
     c_grams_count = Counter(c_grams).most_common(50) #later on maybe dynamically
     w_grams_count = Counter(w_grams).most_common(50)
     c_grams = [gram_count[0] for gram_count in c_grams_count]

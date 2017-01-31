@@ -1,5 +1,4 @@
 import uuid
-import random
 from expiringdict import ExpiringDict
 from flask import Flask, request, render_template, redirect, url_for
 
@@ -12,6 +11,7 @@ SCALE_FEATURES = True
 EXT_TYPE = "fth"
 EXT_PATH = "data/follow_the_hashtag_usa.csv"
 FOREIGN_USER_ID = "steppschuh192"
+FOREIGN_TWEET_PROPORTION = 0.05
 SHOWN_TWEETS_LIMIT = 10
 
 app = Flask(__name__)
@@ -76,7 +76,9 @@ def analyze(user_id, mix_foreign):
     # Add some tweets from another user for testing purposes
     if mix_foreign:
         foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
-        mixed_status_updates, seq = random_insert_seq(user_status_updates[START_BATCH_SIZE:], foreign_tweets)
+        mixed_status_updates = random_insert_seq(user_status_updates[START_BATCH_SIZE:],
+                                                 foreign_tweets,
+                                                 FOREIGN_TWEET_PROPORTION)[0]
         user_status_updates = user_status_updates[:START_BATCH_SIZE] + mixed_status_updates
 
     # Analyze tweets

@@ -10,6 +10,11 @@ body {
     Arial,
     sans-serif !important;
 }
+
+.container {
+    padding-bottom: 25px;
+}
+
 .transparent {
   border: none;
   background-color: transparent;
@@ -17,16 +22,30 @@ body {
 .transparent:focus{
   outline: none;
 }
+
 .input--url {
   margin-top: 13rem;
   margin-bottom: 4rem;
 }
 
-.select-tweet-container {
+.nav-controls {
+  font-size: 0.8em;
+  margin-bottom: 25px;
+}
+
+.page-nav {
+    font-weight: bold;
+}
+
+.page-span {
+    margin: 0 10px;
+}
+
+.tweet-container {
   position: relative;
 }
 
-.select-tweet-checkbox {
+.tweet-checkbox {
   position: absolute;
   bottom: calc(50% - 7px);
   right: 25%;

@@ -1,3 +1,4 @@
+import math
 import uuid
 from expiringdict import ExpiringDict
 from flask import Flask, request, render_template, redirect, url_for
@@ -12,7 +13,7 @@ EXT_TYPE = "fth"
 EXT_PATH = "data/follow_the_hashtag_usa.csv"
 FOREIGN_USER_ID = "steppschuh192"
 FOREIGN_TWEET_PROPORTION = 0.05
-SHOWN_TWEETS_LIMIT = 10
+TWEETS_PER_PAGE = 10
 
 app = Flask(__name__)
 session_cache = ExpiringDict(10, 1200)
@@ -62,13 +63,17 @@ def check(user_id):
 
     # Render template depending on result
     if analyzer.suspicious_statuses:
-        suspicious_ids = [str(x.id) for x in analyzer.suspicious_statuses]
+        # Apply pagination
+        suspicious_tweet_ids = [str(x.id) for x in analyzer.suspicious_statuses]
+        paged_tweets = [suspicious_tweet_ids[i:i + TWEETS_PER_PAGE]
+                        for i in range(0, len(suspicious_tweet_ids), TWEETS_PER_PAGE)]
+
         return render_template("check_compromised.html",
                                sid=sid,
                                user_id=user_id,
                                demo_mode=demo_mode,
-                               num_total=len(suspicious_ids),
-                               suspicious_ids=suspicious_ids[:SHOWN_TWEETS_LIMIT],
+                               num_tweets=len(suspicious_tweet_ids),
+                               paged_tweets=paged_tweets,
                                can_refine=analyzer.can_refine)
     else:
         return render_template("check_success.html",
@@ -102,7 +107,7 @@ def refine(analyzer, suspicious_tweets, confident_tweet_ids):
     confident_tweet_ids = list(map(int, confident_tweet_ids))
     confident_true_tweets = [tweet for tweet in suspicious_tweets
                              if tweet.id in confident_tweet_ids]
-    confident_false_tweets = [tweet for tweet in suspicious_tweets[:SHOWN_TWEETS_LIMIT]
+    confident_false_tweets = [tweet for tweet in suspicious_tweets
                               if tweet.id not in confident_tweet_ids]
     analyzer.refine(confident_true_tweets, confident_false_tweets)
 

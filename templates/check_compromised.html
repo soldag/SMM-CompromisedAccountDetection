@@ -6,16 +6,34 @@
 {% block content %}
     <h1 class="text-center">Your account was compromised!</h1>
     <p class="text-center">
-        {{ num_total }} suspicious tweets were detected. The {{ suspicious_ids | length }} most suspicious ones are shown below. <br />
+        {{ num_tweets }} suspicious tweets were detected and are shown starting with the most suspicious ones. <br />
         You can refine the analysis by selecting those tweets which are actually yours.
     </p>
     <form method="post">
         <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="hidden" name="sid" value="{{ sid }}">
-        <div id="result-block" data-tweet-ids="{{ suspicious_ids }}">
+        <div id="result-block">
+            {% for page in range(paged_tweets|length) %}
+                <div class="page-container page-{{ page }}">
+                    {% for id in paged_tweets[page] %}
+                        <div class="tweet-container">
+                            <div class="tweet" id="{{ id }}"></div>
+                            <input class="tweet-checkbox" type="checkbox"
+                                   value="{{ id }}" name="confident_tweet_id">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
+        <p class="nav-controls text-center">
+            <a class="page-nav prev" href="#" onclick="prevPage()">&lt;&lt;</a>
+            <span class="page-span">Page <span class="page-num-span">1</span></span>
+            <a class="page-nav next" href="#" onclick="nextPage()">&gt;&gt;</a>
+        </p>
         <div class="text-center">
-            <button type="submit" class="btn btn-success" {% if not can_refine %}disabled{% endif %}>Refine</button>
+            {% if not can_refine %}
+                <button type="submit" class="btn btn-success">Refine</button>
+            {% endif %}
             <a class="btn btn-default" href="/check{% if demo_mode %}?demo=1{% endif %}">Back</a>
         </div>
     </form>

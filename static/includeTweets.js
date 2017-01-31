@@ -1,29 +1,57 @@
 'use strict';
 
-window.onload = (function() {
-  let target = document.getElementById('result-block');
-  if (target) {
-    let ids = JSON.parse(target.getAttribute('data-tweet-ids').replace(/'/g, '"'));
+let currentPage = 0;
 
-    for (let id of ids) {
-      let container = document.createElement('div');
-      let input = document.createElement('input');
-      container.classList.add('select-tweet-container');
 
-      input.type = 'checkbox';
-      input.value = id;
-      input.name = 'confident_tweet_id';
-      input.classList.add('select-tweet-checkbox');
-      
-      twttr.widgets.createTweet(
-        id.toString(), container, {
-          theme: 'dark',
-          width: '500px',
-          align: 'center'
+function prevPage() {
+    goToPage(currentPage - 1);
+}
+
+function nextPage() {
+    goToPage(currentPage + 1);
+}
+
+function goToPage(page) {
+    let target = $('.result-block');
+    if (target) {
+        let numPages = $('.page-container').length;
+        currentPage = Math.max(0, Math.min(page, numPages - 1));
+
+        // Show page container
+        $('.page-container').hide();
+        $('.page-container.page-' + currentPage).show();
+
+        // Update pagination controls
+        $('.page-num-span').text(currentPage + 1);
+        if(currentPage == 0) {
+            $('.page-nav.prev').css('visibility', 'hidden');
         }
-      );
-      target.appendChild(container);
-      container.appendChild(input);
+        else {
+            $('.page-nav.prev').css('visibility', 'visible');
+        }
+        if(currentPage == numPages - 1) {
+            $('.page-nav.next').css('visibility', 'hidden');
+        }
+        else {
+            $('.page-nav.next').css('visibility', 'visible');
+        }
     }
-  }
+}
+
+$(document).ready(function() {
+    // Navigate to first page
+    goToPage(0);
+
+    // Insert tweet widgets
+    $('.tweet').each(function(t, tweet) {
+        twttr.widgets.createTweet(
+            $(this).attr('id'),
+            tweet,
+            {
+                theme: 'dark',
+                width: '500px',
+                align: 'center'
+            }
+        );
+    });
 });

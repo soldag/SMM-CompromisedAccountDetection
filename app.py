@@ -15,7 +15,7 @@ FOREIGN_TWEET_PROPORTION = 0.05
 SHOWN_TWEETS_LIMIT = 10
 
 app = Flask(__name__)
-session_cache = ExpiringDict(10, 1200)
+session_cache = ExpiringDict(10, 3600)
 
 
 @app.route("/", methods=["GET"])

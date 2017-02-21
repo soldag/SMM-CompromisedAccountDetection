@@ -2,6 +2,7 @@ import sys
 import math
 import argparse
 import itertools
+from random import sample
 
 from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
@@ -75,14 +76,17 @@ def evaluate_cli(argv):
     n_ext = math.ceil(n_user / (len(grouped_status_updates) - 1))
     evaluation_data = {}
     for i in range(len(grouped_status_updates)):
-        user = grouped_status_updates[i][0].author
-        print("Analyzing @%s (%s/%s)" % (user, i + 1, len(grouped_status_updates)))
+        authors = [group[0].author for group in grouped_status_updates]
+        print("Analyzing @%s (%s/%s)" % (authors[i], i + 1, len(grouped_status_updates)))
 
         # Construct test & training sets
         user_status_updates = grouped_status_updates[i][:n_user]
-        ext_status_updates = [x for j, x in enumerate(grouped_status_updates) if j != i]
-        ext_training_status_updates = list(itertools.chain(*[x[:n_ext] for x in ext_status_updates]))
-        ext_testing_status_updates = list(itertools.chain(*[x[n_ext:n_ext*2] for x in ext_status_updates]))
+        ext_authors = [author for author in authors if author != authors[i]]
+        ext_training_authors = ext_authors[:math.ceil(len(ext_authors)/2)]
+        ext_testing_authors = ext_authors[math.ceil(len(ext_authors)/2):]
+        ext_status_updates = list(itertools.chain(*[x for j, x in enumerate(grouped_status_updates) if j != i]))
+        ext_training_status_updates = sample([x for x in ext_status_updates if x.author in ext_training_authors], n_ext)
+        ext_testing_status_updates = sample([x for x in ext_status_updates if x.author in ext_testing_authors], n_ext)
 
         # Run classifier
         safe_user_status_updates = user_status_updates[:START_BATCH_SIZE]
@@ -98,7 +102,7 @@ def evaluate_cli(argv):
         metrics = calculate_metrics(user_status_updates[START_BATCH_SIZE:],
                                     ext_testing_status_updates,
                                     analyzer.suspicious_statuses)
-        evaluation_data[user] = metrics
+        evaluation_data[authors[i]] = metrics
 
         tp, tn, fp, fn, prec, rec, fm, acc = metrics
         print("TP: %i, TN: %i, FP: %i, FN: %i" % (tp, tn, fp, fn))

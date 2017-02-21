@@ -35,7 +35,8 @@ class StatusUpdateAnalyzer:
 
     @property
     def suspicious_statuses(self):
-        return [x for (x, y) in sorted(self.result, key=lambda x: x[1])]
+        return [x.status_update
+                for x in sorted(self.result, key=lambda x: x.score)]
 
     @property
     def can_refine(self):
@@ -129,9 +130,10 @@ class StatusUpdateAnalyzer:
         if suspicious_indices:
             suspicious_status_updates = self._sublist(status_updates, suspicious_indices)
             suspicious_features = self._sublist(features, suspicious_indices)
-            suspicious_scores = self.classifier.get_scores(suspicious_features)
+            suspicious_scores = [x for x in self.classifier.get_scores(suspicious_features)]
 
-        self.result = list(zip(suspicious_status_updates, suspicious_scores))
+        self.result = [SuspiciousStatusUpdate(*tuple)
+                       for tuple in zip(suspicious_status_updates, suspicious_scores)]
 
     @staticmethod
     def _index(iterable, value, default_value=None):
@@ -143,3 +145,17 @@ class StatusUpdateAnalyzer:
     @staticmethod
     def _sublist(l, indices):
         return [l[i] for i in indices]
+
+
+class SuspiciousStatusUpdate:
+    def __init__(self, status_update, score):
+        self._status_update = status_update
+        self._score = score
+
+    @property
+    def status_update(self):
+        return self._status_update
+
+    @property
+    def score(self):
+        return self._score

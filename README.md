@@ -49,8 +49,10 @@ python cli.py -a crawl -o output.csv --user-limit 50
 
 ### Web App
 ```
-# Run the app locally (DO NOT use this in production)
+python app.py
+
+# DEBUG mode (DO NOT use this in production)
 ./run_app_dev.sh
 ```
 
-The app takes a twitter url from a specific user as input and uses the perceptron classifier.
+The app runs on port 5000. It takes a twitter user id as input and uses the perceptron classifier. By settings query parameter `demo=1`, some external tweets are inserted randomly into the timeline of the user, which should be detected by the app.

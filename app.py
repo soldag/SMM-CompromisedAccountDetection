@@ -61,14 +61,19 @@ def check(user_id):
     }
 
     # Render template depending on result
-    if analyzer.suspicious_statuses:
-        suspicious_ids = [str(x.id) for x in analyzer.suspicious_statuses]
+    if analyzer.result:
+        sorted_result = sorted(analyzer.result,
+                               key=lambda x: x.score,
+                               reverse=True)[:SHOWN_TWEETS_LIMIT]
+        suspicious_ids = [str(x.status_update.id) for x in sorted_result]
+        suspicious_scores = [x.score for x in sorted_result]
         return render_template("check_compromised.html",
                                sid=sid,
                                user_id=user_id,
                                demo_mode=demo_mode,
-                               num_total=len(suspicious_ids),
-                               suspicious_ids=suspicious_ids[:SHOWN_TWEETS_LIMIT],
+                               num_total=len(analyzer.suspicious_statuses),
+                               suspicious_ids=suspicious_ids,
+                               suspicious_scores=suspicious_scores,
                                can_refine=analyzer.can_refine)
     else:
         return render_template("check_success.html",

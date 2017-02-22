@@ -1,6 +1,6 @@
 from sklearn import svm
 
-from core.utils import flatten
+from core.utils import flatten, normalize
 
 
 class OneClassSvmClassifier:
@@ -29,4 +29,5 @@ class OneClassSvmClassifier:
         return [p == 1 for p in self.classifier.predict(samples)]
 
     def get_scores(self, samples):
-        return flatten(self.classifier.decision_function(samples).tolist())
+        return normalize(flatten(self.classifier.decision_function(samples).tolist()),
+                         absolute=True)

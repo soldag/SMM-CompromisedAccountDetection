@@ -1,5 +1,7 @@
 from sklearn import linear_model
 
+from core.utils import normalize
+
 
 class PerceptronClassifier:
     def __init__(self):
@@ -26,4 +28,5 @@ class PerceptronClassifier:
         return self.classifier.predict(samples).tolist()
 
     def get_scores(self, samples):
-        return self.classifier.decision_function(samples).tolist()
+        return normalize(self.classifier.decision_function(samples).tolist(),
+                         absolute=True)

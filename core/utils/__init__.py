@@ -15,3 +15,15 @@ def random_insert_seq(lst, seq, proportion=1):
     lst[:] = [inserts[pos] if pos in inserts else next(input)
               for pos in range(len(lst) + len(seq))]
     return lst, seq
+
+
+def normalize(lst, absolute=False):
+    if absolute:
+        lst = [abs(x) for x in lst]
+    min_value = min(lst)
+    max_value = max(lst)
+    if min_value == max_value:
+        return lst
+
+    return [(value - min_value) / (max_value - min_value)
+            for value in lst]

@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn.ensemble import IsolationForest
 
+from core.utils import normalize
+
 
 class IsolationForestClassifier:
     def __init__(self):
@@ -28,4 +30,5 @@ class IsolationForestClassifier:
         return [p == 1 for p in self.classifier.predict(samples)]
 
     def get_scores(self, samples):
-        return self.classifier.decision_function(samples).tolist()
+        return normalize(self.classifier.decision_function(samples).tolist(),
+                         absolute=True)

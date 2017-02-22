@@ -1,6 +1,9 @@
 # SMM-CompromisedAccountDetection
 
 ## Setup
+#### Python
+Python 3 is required to run the app.
+
 #### Python packages
 You have to install the required packages using ```pip```:
 ```

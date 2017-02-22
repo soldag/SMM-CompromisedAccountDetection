@@ -13,6 +13,24 @@
         <input type="hidden" name="user_id" value="{{ user_id }}">
         <input type="hidden" name="sid" value="{{ sid }}">
         <div id="result-block" data-tweet-ids="{{ suspicious_ids }}" data-tweet-scores="{{ suspicious_scores }}">
+            {% for i in range(suspicious_ids | length) %}
+                <div class="tweet-container" data-tweet-id="{{ suspicious_ids[i] }}">
+                    <input type="checkbox" value="{{ suspicious_ids[i] }}" name="confident_tweet_id" class="select-tweet-checkbox">
+                    {% if suspicious_scores[i] <= 0.5 %}
+                        <div class="score-indicator slightly" title="Slightly suspicious">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                    {% elif suspicious_scores[i] <= 0.85 %}
+                        <div class="score-indicator moderately" title="Moderately suspicious">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                    {% else %}
+                        <div class="score-indicator highly" title="Highly suspicious">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success" {% if not can_refine %}disabled{% endif %}>Refine</button>

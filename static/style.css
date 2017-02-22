@@ -1,51 +1,55 @@
 body {
-  background-color: #333 !important;
-  color: lightgrey !important;
-  font-size: 20px !important;
-  font-family: -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Roboto",
-    "Helvetica Neue",
-    Arial,
-    sans-serif !important;
+    background-color: #333 !important;
+    color: lightgrey !important;
+    font-size: 20px !important;
+    font-family: -apple-system,
+     BlinkMacSystemFont,
+     "Segoe UI",
+     "Roboto",
+     "Helvetica Neue",
+     Arial,
+     sans-serif !important;
 }
 .transparent {
-  border: none;
-  background-color: transparent;
+    border: none;
+    background-color: transparent;
 }
 .transparent:focus{
-  outline: none;
+    outline: none;
 }
 .input--url {
-  margin-top: 13rem;
-  margin-bottom: 4rem;
+    margin-top: 13rem;
+    margin-bottom: 4rem;
 }
 
-.select-tweet-container {
-  position: relative;
+.tweet-container {
+    position: relative;
 }
 
 .select-tweet-checkbox {
-  position: absolute;
-  bottom: calc(50% - 7px);
-  right: 25%;
+    position: absolute;
+    bottom: calc(50% - 7px);
+    right: 25%;
 }
 
-.circle--color-scale {
-  width: 25px;
-  height: 25px;
-  border-radius: 25px;
-  position: absolute;
-  right: 29%;
-  bottom: 10px;
+.score-indicator {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 29%;
+    bottom: 10px;
+    font-size: 25px;
 }
-
-.circle--color-scale--red {
-  background-color: red;
+.score-indicator > span {
+    position: absolute;
+    top: 0;
 }
-.circle--color-scale--orange {
-  background-color: orange;
-}.circle--color-scale--yellow {
-  background-color: yellow;
+.score-indicator.highly {
+    color: red;
+}
+.score-indicator.moderately {
+    color: orange;
+}
+.score-indicator.slightly {
+    color: yellow;
 }

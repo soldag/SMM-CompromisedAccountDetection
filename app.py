@@ -1,4 +1,5 @@
 import uuid
+from random import sample
 from expiringdict import ExpiringDict
 from flask import Flask, request, render_template, redirect, url_for
 
@@ -84,6 +85,8 @@ def analyze(user_id, mix_foreign):
     # Retrieve status updates
     user_status_updates = get_status_updates("twitter", user_id=user_id)
     ext_status_updates = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
+    if len(ext_status_updates) > len(user_status_updates):
+        ext_status_updates = sample(ext_status_updates, len(user_status_updates))
 
     # Add some tweets from another user for testing purposes
     if mix_foreign:

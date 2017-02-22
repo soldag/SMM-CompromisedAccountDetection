@@ -16,6 +16,9 @@ The application additionally needs the following NLTK data packages:
 
 For installation instructions please visit [http://www.nltk.org/data.html](http://www.nltk.org/data.html).
 
+#### Twitter API credentials
+You have to create a file `twitter_credentials.json` based on the template containing your Twitter API credentials. 
+
 ## Usage
 ### Command Line Interface
 ```python cli.py [options]```

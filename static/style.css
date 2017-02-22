@@ -31,3 +31,21 @@ body {
   bottom: calc(50% - 7px);
   right: 25%;
 }
+
+.circle--color-scale {
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  position: absolute;
+  right: 29%;
+  bottom: 10px;
+}
+
+.circle--color-scale--red {
+  background-color: red;
+}
+.circle--color-scale--orange {
+  background-color: orange;
+}.circle--color-scale--yellow {
+  background-color: yellow;
+}

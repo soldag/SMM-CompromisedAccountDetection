@@ -61,4 +61,4 @@ python app.py
 ./run_app_dev.sh
 ```
 
-The app runs on port 5000. It takes a twitter user id as input and uses the perceptron classifier. By settings query parameter `demo=1`, some external tweets are inserted randomly into the timeline of the user, which should be detected by the app.
+The app runs on port 5000. It takes a twitter user id as input and uses the decision tree classifier. By settings query parameter `demo=1`, some external tweets are inserted randomly into the timeline of the user, which should be detected by the app.

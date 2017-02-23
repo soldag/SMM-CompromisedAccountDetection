@@ -5,14 +5,13 @@ from flask import Flask, request, render_template, redirect, url_for
 
 from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
-from core.utils import random_insert_seq
+from core.utils import random_insert_seq, split_by_author
 
-CLASSIFIER_TYPE = "perceptron"
+CLASSIFIER_TYPE = "decision_tree"
 SCALE_FEATURES = True
-EXT_TYPE = "fth"
-EXT_PATH = "data/follow_the_hashtag_usa.csv"
-FOREIGN_USER_ID = "steppschuh192"
-FOREIGN_TWEET_PROPORTION = 0.05
+EXT_TYPE = "twitter"
+EXT_PATH = "data/twitter/20_user_max_tweets.csv"
+TWEET_LIMIT = 1000
 SHOWN_TWEETS_LIMIT = 10
 
 app = Flask(__name__)
@@ -83,22 +82,23 @@ def check(user_id):
 
 def analyze(user_id, mix_foreign):
     # Retrieve status updates
-    user_status_updates = get_status_updates("twitter", user_id=user_id)
-    ext_status_updates = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
-    if len(ext_status_updates) > len(user_status_updates):
-        ext_status_updates = sample(ext_status_updates, len(user_status_updates))
+    user_statuses = get_status_updates("twitter", user_id=user_id,
+                                       tweet_limit=TWEET_LIMIT)
+    ext_statuses = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
+    ext_training_statuses, ext_testing_statuses = split_by_author(ext_statuses,
+                                                                  [user_id])
 
     # Add some tweets from another user for testing purposes
     if mix_foreign:
-        foreign_tweets = get_status_updates("twitter", user_id=FOREIGN_USER_ID)
-        mixed_status_updates = random_insert_seq(user_status_updates[START_BATCH_SIZE:],
-                                                 foreign_tweets,
-                                                 FOREIGN_TWEET_PROPORTION)[0]
-        user_status_updates = user_status_updates[:START_BATCH_SIZE] + mixed_status_updates
+        mixed_statuses = random_insert_seq(user_statuses[START_BATCH_SIZE:],
+                                           ext_testing_statuses)[0]
+        user_statuses = user_statuses[:START_BATCH_SIZE] + mixed_statuses
 
     # Analyze tweets
-    analyzer = StatusUpdateAnalyzer(user_status_updates,
-                                    ext_status_updates,
+    if len(ext_training_statuses) > len(user_statuses):
+        ext_training_statuses = sample(ext_training_statuses, len(user_statuses))
+    analyzer = StatusUpdateAnalyzer(user_statuses,
+                                    ext_training_statuses,
                                     CLASSIFIER_TYPE,
                                     SCALE_FEATURES)
     analyzer.analyze()

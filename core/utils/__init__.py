@@ -1,5 +1,5 @@
 import math
-
+import itertools
 from random import sample
 
 
@@ -27,3 +27,20 @@ def normalize(lst, absolute=False):
 
     return [(value - min_value) / (max_value - min_value)
             for value in lst]
+
+
+def split_by_author(status_updates, exclude_authors=None):
+    if exclude_authors is None:
+        exclude_authors = []
+
+    authors = list(set([status_update.author for status_update in status_updates
+                        if status_update.author not in exclude_authors]))
+    boundary = math.ceil(len(authors) / 2)
+    training_authors = authors[:boundary]
+    testing_authors = authors[boundary:]
+    training_status_updates = [x for x in status_updates
+                               if x.author in training_authors]
+    testing_status_updates = [x for x in status_updates
+                              if x.author in testing_authors]
+
+    return training_status_updates, testing_status_updates

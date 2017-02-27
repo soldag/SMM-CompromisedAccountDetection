@@ -27,7 +27,7 @@ You have to create a file `twitter_credentials.json` based on the template conta
 ##### General arguments
 The first option is the switch between the crawl cli, the analyze cli, and the evaluate cli:
 - ```crawl``` crawls tweets from the (default: 100) most popular twitter users (people with the most followers) and stores them on disk.
-- ```analyze``` determines the best suited hyperparameter combinations for a certain classifier based on a given data set.
+- ```analyze``` determines the best suited hyper-parameter combinations for a certain classifier based on a given data set.
 - ```evaluate``` evaluates the anomaly detection approach using cross-validation.
 
 ##### Crawling status updates
@@ -53,7 +53,7 @@ The report of the analysis is written to disk (```./classifier_optimization_repo
 # Crawl the 50 most popular users' tweets
 python cli.py crawl -o twitter_data.csv --user-limit 50
 
-# Analyze the hyperparameter combinations for  the Decision Tree classifier on the crawled twitter dataset
+# Analyze the hyper-parameter combinations for  the Decision Tree classifier on the crawled twitter dataset
 python cli.py analyze -t twitter -c decision_tree -p twitter_data.csv
 
 # Evaluate the performance of the Decision Tree classifier on the crawled twitter dataset

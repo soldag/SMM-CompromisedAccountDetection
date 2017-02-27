@@ -31,7 +31,7 @@ def crawl_cli(argv):
 
 def analyze_cli(argv):
     # Create argument parser
-    parser = argparse.ArgumentParser(description="This application determines the best suited hyperparameter combinations for a certain classifier based on a given data set.")
+    parser = argparse.ArgumentParser(description="This application determines the best suited hyper-parameter combinations for a certain classifier based on a given data set.")
     parser.add_argument("--data-source", "-t",
                         help="The data source for tweets that should be used for classifier analysis. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",

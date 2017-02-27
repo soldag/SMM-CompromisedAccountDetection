@@ -25,7 +25,7 @@ def prepare_two_class_data(user_statuses, ext_statuses):
 
 # Utility function to report best scores
 def report(results, n_top=3):
-    file = open('classifier_evaluation_report.log', 'a')
+    file = open('classifier_optimization_report.log', 'a')
     file.write("{0}:\n".format(
         ctime(int(time()))))
     for i in range(1, n_top + 1):

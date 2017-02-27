@@ -15,13 +15,13 @@ from crawler import crawl_status_updates
 
 def crawl_cli(argv):
     # Create argument parser
-    parser = argparse.ArgumentParser(description="This application crawls tweets from the 100 most popular twitter users and stores them on disk.")
+    parser = argparse.ArgumentParser(description="This application crawls tweets from the most popular twitter users and stores them on disk.")
     parser.add_argument("--output-path", "-o",
                         help="The output path of the generated dataset.")
     parser.add_argument("--user-limit", type=int, default=100,
                         help="The maximum number of accounts to crawl.")
     parser.add_argument("--limit", type=int, default=0,
-                        help="The maximum number of status updates per user to crawl.")
+                        help="The maximum number of tweets per account to crawl.")
     args = parser.parse_args(argv)
 
     # Extract arguments and start crawling
@@ -31,13 +31,13 @@ def crawl_cli(argv):
 
 def analyze_cli(argv):
     # Create argument parser
-    parser = argparse.ArgumentParser(description="This application evaluates the anomaly detection approach.")
+    parser = argparse.ArgumentParser(description="This application determines the best suited hyperparameter combinations for a certain classifier based on a given data set.")
     parser.add_argument("--data-source", "-t",
-                        help="The data source for tweets that should be used for cross-validation. Possible values are 'fth', 'mp' and 'twitter'.")
+                        help="The data source for tweets that should be used for classifier analysis. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
-                        help="The path of the dataset that should be used for cross-validation.")
+                        help="The path of the dataset that should be used for classifier analysis.")
     parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be trained.")
+                        help="The type of the classifier to be analyzed. Possible values are 'decision_tree' and 'perceptron'.")
     args = parser.parse_args(argv)
 
     # Get status updates
@@ -60,9 +60,9 @@ def evaluate_cli(argv):
     parser.add_argument("--dataset-path", "-p",
                         help="The path of the dataset that should be used for cross-validation.")
     parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be trained.")
+                        help="The type of the classifier to be trained. Possible values are 'decision_tree', 'one_class_svm', 'isolation_forest' and 'perceptron'.")
     parser.add_argument("--no-scaling", dest='scale_features', action='store_false',
-                        help="Scale feature vector. ")
+                        help="Disable feature scaling. ")
     args = parser.parse_args(argv)
 
     # Get status updates

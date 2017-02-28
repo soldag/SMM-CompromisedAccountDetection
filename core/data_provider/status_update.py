@@ -79,5 +79,5 @@ class StatusUpdate:
                             country=obj["country"],
                             latitude=obj["latitude"],
                             longitude=obj["longitude"],
-                            number_of_shares=obj["number_of_shares"],
-                            number_of_likes=obj["number_of_likes"])
+                            number_of_shares=int(obj["number_of_shares"]),
+                            number_of_likes=int(obj["number_of_likes"]))

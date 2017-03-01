@@ -1,6 +1,21 @@
 # SMM-CompromisedAccountDetection
 
 ## Setup
+### Docker
+The app can be run using docker. The following steps are necessary:
+1. Install docker. See https://www.docker.com/products/docker#/ for details.
+2. Clone the repository
+3. Create the twitter API credentials file as described below
+3. Go into the directory, build the image and run it
+```bash
+cd /SMM-CompromisedAccountDetection
+docker build -t smm-compromised-account-detection .
+docker run -d -p 5000:5000 smm-compromised-account-detection
+```
+
+The app should be available at `http:localhost:5000/`.
+
+### Native
 #### Python
 Python 3 is required to run the app.
 
@@ -16,8 +31,8 @@ The application additionally needs the following NLTK data packages:
 
 For installation instructions please visit [http://www.nltk.org/data.html](http://www.nltk.org/data.html).
 
-#### Twitter API credentials
-You have to create a file `twitter_credentials.json` based on the template containing your Twitter API credentials. 
+### Twitter API credentials
+For both options, you have to create a file `twitter_credentials.json` based on the template containing your Twitter API credentials. 
 
 ## Usage
 ### Command Line Interface

@@ -8,7 +8,6 @@ from random import sample
 
 from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
-from core.data_provider.status_update import StatusUpdate
 from core.evaluation import calculate_metrics, write_evaluation_results
 from core.utils import random_insert_seq, split_by_author
 from core.utils.classifier_optimizer import ClassifierOptimizer
@@ -89,19 +88,9 @@ def evaluate_cli(argv):
 
             # Adapt number of likes and shares of half of external status updates
             for j in np.random.choice(len(ext_status_updates), int(math.ceil(len(ext_status_updates) / 2)), replace=False):
-                status_update = ext_status_updates[j]
                 random_status_update = random.choice(grouped_status_updates[i])
-                ext_status_updates[j] = StatusUpdate(
-                    id=status_update.id,
-                    author=status_update.author,
-                    content=status_update.content,
-                    date_time=status_update.date_time,
-                    language=status_update.language,
-                    country=status_update.country,
-                    latitude=status_update.latitude,
-                    longitude=status_update.longitude,
-                    number_of_shares=random_status_update.number_of_shares,
-                    number_of_likes=random_status_update.number_of_likes)
+                ext_status_updates[j]._number_of_likes = random_status_update.number_of_likes
+                ext_status_updates[j]._number_of_shares = random_status_update.number_of_shares
 
             # Construct test & training sets
             ext_training_status_updates, ext_testing_status_updates = split_by_author(ext_status_updates, [user])

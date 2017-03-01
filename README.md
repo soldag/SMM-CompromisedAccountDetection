@@ -46,6 +46,7 @@ The report of the analysis is written to disk (```./classifier_optimization_repo
 - ```-t / --data-source DATA_SOURCE``` The data source for tweets that should be used for cross-validation. Possible values are ```fth```, ```mp``` and ```twitter```.
 - ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for cross-validation.
 - ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
+- ```--evaluation-rounds"```  Number of rounds the evaluation is executed (default: 10). Reduces the variation caused by sampling.
 - ```--no-scaling``` Disable feature scaling.
 
 #### Examples

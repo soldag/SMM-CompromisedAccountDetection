@@ -13,7 +13,16 @@ docker build -t smm-compromised-account-detection .
 docker run -d -p 5000:5000 smm-compromised-account-detection
 ```
 
-The app should be available at `http:localhost:5000/`.
+#### Mac
+The app is available at `http:localhost:5000`.
+
+#### Windows
+Execute the following command to determine the IP of the `DOCKER_VM_IP`.
+```bash
+docker-machine ip default       # the machine could be named different from 'default' !
+```
+
+The app is available at `http:DOCKER_VM_IP:5000`.
 
 ### Native
 #### Python

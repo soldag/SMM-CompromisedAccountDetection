@@ -8,7 +8,8 @@ The app can be run using docker. The following steps are necessary:
 1. Install docker. See https://www.docker.com/products/docker#/ for details.
 2. Clone the repository.
 3. Create the twitter API credentials file as described [below](#twitter-api-credentials).
-3. Go into the directory, build the image and run it.
+4. Copy the twitter dataset into `data/tweets.csv`. It can be created using the CLI interface (see [CLI Reference](docs/cli.md)).
+5. Go into the directory, build the image and run it.
 ```bash
 cd /SMM-CompromisedAccountDetection
 docker build -t smm-compromised-account-detection .

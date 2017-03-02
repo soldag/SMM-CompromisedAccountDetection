@@ -4,7 +4,7 @@
 
 ## Options
 ### crawl
-Crawls tweets from the most popular twitter users (people with the most followers) and stores them on disk. List of twitter users is stored in [popular_twitter_users.csv](crawler/popular_twitter_users.csv).
+Crawls tweets from the most popular twitter users (people with the most followers) and stores them on disk. List of twitter users is stored in [popular_twitter_users.csv](../crawler/popular_twitter_users.csv).
 
 | Flag | Name          | Description                                        | Default      |
 |------|---------------|----------------------------------------------------|--------------|

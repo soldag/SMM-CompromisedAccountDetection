@@ -51,7 +51,7 @@ def tune_cli(argv):
     grouped_status_updates = [list(g) for k, g in itertools.groupby(status_updates, lambda x: x.author)]
     n = 500
 
-    ClassifierOptimizer(args.classifier_type, grouped_status_updates[0][:n], grouped_status_updates[1][:n]).execute()
+    ClassifierOptimizer(args.classifier, grouped_status_updates[0][:n], grouped_status_updates[1][:n]).execute()
 
 
 def evaluate_cli(argv):
@@ -107,7 +107,7 @@ def evaluate_cli(argv):
             # Run classifier
             analyzer = StatusUpdateAnalyzer(safe_user_status_updates + mixed_user_status_updates,
                                             ext_training_status_updates,
-                                            args.classifier_type, args.scale_features)
+                                            args.classifier, args.scale_features)
             analyzer.analyze()
 
             # Evaluation metrics

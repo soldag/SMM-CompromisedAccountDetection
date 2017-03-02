@@ -46,6 +46,8 @@ The web app takes a twitter user id as input, crawls the tweets of the user and 
 
 For demo purposes the HTTP query parameter `demo=1` can be set to randomly insert some external tweets into the timeline of the user. These tweets should be detected by the app.
 
+The app needs a dataset containing tweets that can be used as negative samples and for demo mode. It can be created by using our crawling command-line tool (see [CLI Reference](docs/cli.md)). 
+
 ```
 # Starts the web app with default parameters.
 python app.py

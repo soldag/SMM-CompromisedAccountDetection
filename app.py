@@ -10,7 +10,7 @@ from core.utils import random_insert_seq, split_by_author
 
 DEFAULT_HOST = "0.0.0.0"
 DEFAULT_PORT = 5000
-DEFAULT_DATA_TYPE = "twitter"
+DEFAULT_DATA_SOURCE = "twitter"
 DEFAULT_DATA_PATH = "data/tweets.csv"
 DEFAULT_CLASSIFIER = "decision_tree"
 
@@ -103,8 +103,8 @@ def analyze(user_id, mix_foreign):
     # Retrieve status updates
     user_statuses = get_status_updates("twitter", user_id=user_id,
                                        tweet_limit=TWEET_LIMIT)
-    ext_statuses = get_status_updates(app.config['data_type'],
-                                      dataset_path=app.config['data_path'])
+    ext_statuses = get_status_updates(app.config['data_source'],
+                                      dataset_path=app.config['dataset_path'])
     ext_training_statuses, ext_testing_statuses = split_by_author(ext_statuses,
                                                                   [user_id])
 
@@ -138,19 +138,19 @@ def refine(analyzer, suspicious_tweets, confident_tweet_ids):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-H", "--host",
-                        help="Hostname of the Flask app " +
+                        help="Hostname of the app " +
                              "[default: %s]" % DEFAULT_HOST,
                         default=DEFAULT_HOST)
     parser.add_argument("-P", "--port",
-                        help="Port for the Flask app " +
+                        help="Port for the app " +
                              "[default: %s]" % DEFAULT_PORT,
                         default=DEFAULT_PORT)
-    parser.add_argument("-t", "--data-type",
-                        help="Type of the status update dataset " +
-                             "[default: %s]" % DEFAULT_DATA_TYPE,
-                        default=DEFAULT_DATA_TYPE)
-    parser.add_argument("-p", "--data-path",
-                        help="Path of the status update dataset " +
+    parser.add_argument("-s", "--data-source",
+                        help="The data source for tweets that should be used for analyzing. Possible values are 'fth', 'mp' and 'twitter' " +
+                             "[default: %s]" % DEFAULT_DATA_SOURCE,
+                        default=DEFAULT_DATA_SOURCE)
+    parser.add_argument("-p", "--dataset-path",
+                        help="The path of the dataset that should be used for analyzing " +
                              "[default: %s]" % DEFAULT_DATA_PATH,
                         default=DEFAULT_DATA_PATH)
     parser.add_argument("-c", "--classifier",
@@ -159,8 +159,8 @@ if __name__ == "__main__":
                         default=DEFAULT_CLASSIFIER)
 
     args = parser.parse_args()
-    app.config['data_type'] = args.data_type
-    app.config['data_path'] = args.data_path
+    app.config['data_source'] = args.data_source
+    app.config['dataset_path'] = args.dataset_path
     app.config['classifier'] = args.classifier
 
     app.run(host=args.host, port=int(args.port))

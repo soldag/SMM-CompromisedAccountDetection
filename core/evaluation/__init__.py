@@ -14,9 +14,9 @@ def calculate_metrics(pos_samples, neg_samples, neg_predictions):
     return tp, tn, fp, fn, prec, rec, fm, acc
 
 
-def write_evaluation_results(data):
+def write_evaluation_results(data, file_name):
     # Create a workbook and add a worksheet.
-    workbook = xlsxwriter.Workbook('evaluation.xlsx')
+    workbook = xlsxwriter.Workbook(file_name)
     worksheet = workbook.add_worksheet()
 
     # Start from the first cell. Rows and columns are zero indexed.

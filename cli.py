@@ -19,7 +19,7 @@ def crawl_cli(argv):
     # Create argument parser
     parser = argparse.ArgumentParser(description="This application crawls tweets from the most popular twitter users and stores them on disk.")
     parser.add_argument("--output-path", "-o",
-                        help="The output path of the generated dataset.")
+                        help="The output path of the crawled dataset.")
     parser.add_argument("--user-limit", type=int, default=100,
                         help="The maximum number of accounts to crawl.")
     parser.add_argument("--limit", type=int, default=0,
@@ -31,15 +31,15 @@ def crawl_cli(argv):
                          user_limit=args.user_limit, limit=args.limit)
 
 
-def analyze_cli(argv):
+def tune_cli(argv):
     # Create argument parser
     parser = argparse.ArgumentParser(description="This application determines the best suited hyper-parameter combinations for a certain classifier based on a given data set.")
-    parser.add_argument("--data-source", "-t",
+    parser.add_argument("--data-source", "-s",
                         help="The data source for tweets that should be used for classifier analysis. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
                         help="The path of the dataset that should be used for classifier analysis.")
-    parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be analyzed. Possible values are 'decision_tree' and 'perceptron'.")
+    parser.add_argument("--classifier", "-c",
+                        help="The classifier to be analyzed. Possible values are 'decision_tree' and 'perceptron'.")
     args = parser.parse_args(argv)
 
     # Get status updates
@@ -57,16 +57,18 @@ def analyze_cli(argv):
 def evaluate_cli(argv):
     # Create argument parser
     parser = argparse.ArgumentParser(description="This application evaluates the anomaly detection approach.")
-    parser.add_argument("--data-source", "-t",
+    parser.add_argument("--data-source", "-s",
                         help="The data source for tweets that should be used for cross-validation. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
                         help="The path of the dataset that should be used for cross-validation.")
-    parser.add_argument("--classifier-type", "-c",
-                        help="The type of the classifier to be trained. Possible values are 'decision_tree', 'one_class_svm', 'isolation_forest' and 'perceptron'.")
+    parser.add_argument("--classifier", "-c",
+                        help="The classifier to be trained. Possible values are 'decision_tree', 'one_class_svm', 'isolation_forest' and 'perceptron'.")
     parser.add_argument("--evaluation-rounds", type=int, default=10,
                         help="Number of rounds the evaluation is executed. Reduces the variation caused by sampling.")
     parser.add_argument("--no-scaling", dest='scale_features', action='store_false',
-                        help="Disable feature scaling.")
+                        help="Disables feature scaling.")
+    parser.add_argument("--output-path", "-o", default="evaluation.xlsx",
+                        help="The path of the file the results should be written to.")
     args = parser.parse_args(argv)
 
     # Get status updates
@@ -121,7 +123,7 @@ def evaluate_cli(argv):
 
         evaluation_data.append(round_data)
 
-    write_evaluation_results(evaluation_data)
+    write_evaluation_results(evaluation_data, args.output_path)
 
 
 if __name__ == "__main__":
@@ -134,8 +136,8 @@ if __name__ == "__main__":
     # Call sub CLI
     if action == "crawl":
         crawl_cli(argv)
-    elif action == "analyze":
-        analyze_cli(argv)
+    elif action == "tune":
+        tune_cli(argv)
     elif action == "evaluate":
         evaluate_cli(argv)
     else:

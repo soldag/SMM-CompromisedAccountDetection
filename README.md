@@ -1,12 +1,14 @@
-# SMM-CompromisedAccountDetection
+# CompromisedAccountDetection
+This application was developed in the context of the [Social Media Mining seminar](https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering/lehrveranstaltung/course/2016/wintersemester-20162017-social-media-mining.html) at Hasso-Plattner Institute. It aims to detect tweets in the timeline of a given user, which are suspicious in order to tell if the account was compromised.   
 
 ## Setup
 ### Docker
 The app can be run using docker. The following steps are necessary:
+
 1. Install docker. See https://www.docker.com/products/docker#/ for details.
-2. Clone the repository
-3. Create the twitter API credentials file as described below
-3. Go into the directory, build the image and run it
+2. Clone the repository.
+3. Create the twitter API credentials file as described [below](#twitter-api-credentials).
+3. Go into the directory, build the image and run it.
 ```bash
 cd /SMM-CompromisedAccountDetection
 docker build -t smm-compromised-account-detection .
@@ -14,84 +16,51 @@ docker run -d -p 5000:5000 smm-compromised-account-detection
 ```
 
 #### Mac
-The app is available at `http:localhost:5000`.
+The app is available at `http://localhost:5000`.
 
 #### Windows
 Execute the following command to determine the IP of the `DOCKER_VM_IP`.
 ```bash
-docker-machine ip default       # the machine could be named different from 'default' !
+docker-machine ip default  # the machine could be named different from 'default' !
 ```
 
-The app is available at `http:DOCKER_VM_IP:5000`.
+The app is available at `http://DOCKER_VM_IP:5000`.
 
 ### Native
 #### Python
 Python 3 is required to run the app.
 
-#### Python packages
-You have to install the required packages using ```pip```:
+#### Requirements
+You have to install the required packages using ```pip``` and the necessary NLTK data packages:
 ```
 pip install -r requirements.txt
+python -m nltk.downloader punkt
 ```
-
-#### NLTK Data
-The application additionally needs the following NLTK data packages:
-- ```punkt``` - Punkt Tokenizer Models
-
-For installation instructions please visit [http://www.nltk.org/data.html](http://www.nltk.org/data.html).
 
 ### Twitter API credentials
 For both options, you have to create a file `twitter_credentials.json` based on the template containing your Twitter API credentials. 
 
-## Usage
-### Command Line Interface
-```python cli.py [options]```
-
-#### Options
-##### General arguments
-The first option is the switch between the crawl cli, the analyze cli, and the evaluate cli:
-- ```crawl``` crawls tweets from the (default: 100) most popular twitter users (people with the most followers) and stores them on disk.
-- ```analyze``` determines the best suited hyper-parameter combinations for a certain classifier based on a given data set.
-- ```evaluate``` evaluates the anomaly detection approach using cross-validation.
-
-##### Crawling status updates
-- ```-o /--output-path OUTPUT_PATH``` The output path of the generated dataset.
-- ```--user-limit USER_LIMIT``` The maximum number of accounts to crawl. (default: 100)
-- ```--limit LIMIT``` The maximum number of tweets per account to crawl. (default: 0)
-
-##### Analyzing classifier
-- ```-t / --data-source DATA_SOURCE``` The data source for tweets that should be used for classifier analysis. Possible values are ```fth```, ```mp``` and ```twitter```.
-- ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for classifier analysis.
-- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be analyzed. Possible values are ```decision_tree``` and ```perceptron```.
-
-The report of the analysis is written to disk (```./classifier_optimization_report.log```).
-
-##### Evaluation
-- ```-t / --data-source DATA_SOURCE``` The data source for tweets that should be used for cross-validation. Possible values are ```fth```, ```mp``` and ```twitter```.
-- ```-p / --dataset-path DATASET_PATH``` The path of the dataset that should be used for cross-validation.
-- ```-c / --classifier-type CLASSIFIER_TYPE``` The type of the classifier to be trained. Possible values are ```decision_tree```, ```one_class_svm```, ```isolation_forest``` and ```perceptron```.
-- ```--evaluation-rounds"```  Number of rounds the evaluation is executed (default: 10). Reduces the variation caused by sampling.
-- ```--no-scaling``` Disable feature scaling.
-
-#### Examples
-```
-# Crawl the 50 most popular users' tweets
-python cli.py crawl -o twitter_data.csv --user-limit 50
-
-# Analyze the hyper-parameter combinations for  the Decision Tree classifier on the crawled twitter dataset
-python cli.py analyze -t twitter -c decision_tree -p twitter_data.csv
-
-# Evaluate the performance of the Decision Tree classifier on the crawled twitter dataset
-python cli.py evaluate -t twitter -c decision_tree -p twitter_data.csv
-```
-
+## Running
 ### Web App
+The web app takes a twitter user id as input, crawls the tweets of the user and shows those, which are detected as suspicious.
+
+For demo purposes the HTTP query parameter `demo=1` can be set to randomly insert some external tweets into the timeline of the user. These tweets should be detected by the app.
+
 ```
-# Start the app
+# Starts the web app with default parameters.
 python app.py
-
-# DEBUG mode (DO NOT use this in production)
-./run_app_dev.sh
 ```
 
-The app runs on port 5000. It takes a twitter user id as input and uses the decision tree classifier. By setting query parameter `demo=1`, some external tweets are inserted randomly into the timeline of the user. These tweets should be detected by the app.
+The app can be configured using the following command line arguments:
+
+| Flag | Name           | Description                                                                                                              | Default         |
+|------|----------------|--------------------------------------------------------------------------------------------------------------------------|-----------------|
+| -H   | --data-source  | The hostname of the app.                                                                                                 | 0.0.0.0         |
+| -P   | --dataset-path | The port for the app.                                                                                                    | 5000            |
+| -s   | --data-source  | The data source for tweets that should be used for analyzing. Possible values are `fth`, `mp` and `twitter`.             | twitter         |
+| -p   | --dataset-path | The path of the dataset that should be used for analyzing                                                                | data/tweets.csv |
+| -c   | --classifier   | The classifier to be trained. Possible values are `decision_tree`, `one_class_svm`, `isolation_forest` and `perceptron`. | decision_tree   |
+
+
+### Command Line Interface
+The app provides a command line interface for crawling a dataset, tuning hyperparameters and evaluation. Have a look at the [CLI Reference](docs/cli.md).

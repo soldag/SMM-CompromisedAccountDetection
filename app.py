@@ -1,4 +1,5 @@
 import uuid
+import argparse
 from random import sample
 from expiringdict import ExpiringDict
 from flask import Flask, request, render_template, redirect, url_for
@@ -7,10 +8,14 @@ from core import StatusUpdateAnalyzer, START_BATCH_SIZE
 from core.data_provider import get_status_updates
 from core.utils import random_insert_seq, split_by_author
 
-CLASSIFIER_TYPE = "decision_tree"
+DEFAULT_HOST = "0.0.0.0"
+DEFAULT_PORT = 5000
+DEFAULT_DATA_TYPE = "twitter"
+DEFAULT_DATA_PATH = "data/tweets.csv"
+DEFAULT_CLASSIFIER = "decision_tree"
+
+DEFAULT_USER_ID = "satyanadella"
 SCALE_FEATURES = True
-EXT_TYPE = "twitter"
-EXT_PATH = "data/twitter/20_user_max_tweets.csv"
 TWEET_LIMIT = 1000
 SHOWN_TWEETS_LIMIT = 10
 
@@ -19,39 +24,54 @@ session_cache = ExpiringDict(10, 3600)
 
 
 @app.route("/", methods=["GET"])
-@app.route("/check/", methods=["GET"])
 def index():
-    return render_template("check.html")
+    demo = request.values.get("demo")
+    return redirect(url_for("check_get", demo=demo))
+
+
+@app.route("/check/", methods=["GET"])
+def check_get():
+    demo = request.values.get("demo")
+    error = request.values.get("error")
+    user_id = request.values.get("user_id", DEFAULT_USER_ID)
+
+    return render_template("check.html",
+                           demo=demo, error=error, user_id=user_id)
 
 
 @app.route("/check/", methods=["POST"])
-def check_redirect():
-    user_id = request.values.get("user_id")
+def check_post():
     demo = request.values.get("demo")
+    user_id = request.values.get("user_id")
 
-    return redirect(url_for("check", user_id=user_id, demo=demo))
+    return redirect(url_for("check_user", demo=demo, user_id=user_id))
 
 
 @app.route("/check/<user_id>", methods=["GET", "POST"])
-def check(user_id):
+def check_user(user_id):
     # Get form data
     sid = request.values.get("sid")
     confident_tweet_ids = request.values.getlist("confident_tweet_id")
-    demo_mode = request.values.get("demo") == '1'
+    demo = request.values.get("demo")
+    demo_mode = demo == '1'
 
     # Get results
-    if sid and sid in session_cache:
-        # Restore session from cache
-        session = session_cache[sid]
-        analyzer = session['analyzer']
-        demo_mode = session['demo_mode']
-    else:
-        # Run analyzer
-        analyzer = analyze(user_id, demo_mode)
+    try:
+        if sid and sid in session_cache:
+            # Restore session from cache
+            session = session_cache[sid]
+            analyzer = session['analyzer']
+            demo_mode = session['demo_mode']
+        else:
+            # Run analyzer
+            analyzer = analyze(user_id, demo_mode)
 
-    # Refine model, if confident tweets are provided
-    if confident_tweet_ids:
-        refine(analyzer, analyzer.suspicious_statuses, confident_tweet_ids)
+        # Refine model, if confident tweets are provided
+        if confident_tweet_ids:
+            refine(analyzer, analyzer.suspicious_statuses, confident_tweet_ids)
+    except Exception as error:
+        return redirect(url_for("check_get",
+                                demo=demo, user_id=user_id, error=str(error)))
 
     # Store result in cache
     sid = sid or str(uuid.uuid4())
@@ -69,22 +89,22 @@ def check(user_id):
         suspicious_scores = [x.score for x in sorted_result]
         return render_template("check_compromised.html",
                                sid=sid,
+                               demo=demo,
                                user_id=user_id,
-                               demo_mode=demo_mode,
                                num_total=len(analyzer.suspicious_statuses),
                                suspicious_ids=suspicious_ids,
                                suspicious_scores=suspicious_scores,
                                can_refine=analyzer.can_refine)
     else:
-        return render_template("check_success.html",
-                               demo_mode=demo_mode)
+        return render_template("check_success.html", demo=demo)
 
 
 def analyze(user_id, mix_foreign):
     # Retrieve status updates
     user_statuses = get_status_updates("twitter", user_id=user_id,
                                        tweet_limit=TWEET_LIMIT)
-    ext_statuses = get_status_updates(EXT_TYPE, dataset_path=EXT_PATH)
+    ext_statuses = get_status_updates(app.config['data_type'],
+                                      dataset_path=app.config['data_path'])
     ext_training_statuses, ext_testing_statuses = split_by_author(ext_statuses,
                                                                   [user_id])
 
@@ -99,7 +119,7 @@ def analyze(user_id, mix_foreign):
         ext_training_statuses = sample(ext_training_statuses, len(user_statuses))
     analyzer = StatusUpdateAnalyzer(user_statuses,
                                     ext_training_statuses,
-                                    CLASSIFIER_TYPE,
+                                    app.config['classifier'],
                                     SCALE_FEATURES)
     analyzer.analyze()
 
@@ -116,4 +136,31 @@ def refine(analyzer, suspicious_tweets, confident_tweet_ids):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-H", "--host",
+                        help="Hostname of the Flask app " +
+                             "[default: %s]" % DEFAULT_HOST,
+                        default=DEFAULT_HOST)
+    parser.add_argument("-P", "--port",
+                        help="Port for the Flask app " +
+                             "[default: %s]" % DEFAULT_PORT,
+                        default=DEFAULT_PORT)
+    parser.add_argument("-t", "--data-type",
+                        help="Type of the status update dataset " +
+                             "[default: %s]" % DEFAULT_DATA_TYPE,
+                        default=DEFAULT_DATA_TYPE)
+    parser.add_argument("-p", "--data-path",
+                        help="Path of the status update dataset " +
+                             "[default: %s]" % DEFAULT_DATA_PATH,
+                        default=DEFAULT_DATA_PATH)
+    parser.add_argument("-c", "--classifier",
+                        help="The classifier to use " +
+                             "[default: %s]" % DEFAULT_CLASSIFIER,
+                        default=DEFAULT_CLASSIFIER)
+
+    args = parser.parse_args()
+    app.config['data_type'] = args.data_type
+    app.config['data_path'] = args.data_path
+    app.config['classifier'] = args.classifier
+
+    app.run(host=args.host, port=int(args.port))

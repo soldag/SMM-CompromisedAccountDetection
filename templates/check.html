@@ -1,18 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Check Account{% endblock %}
 {% block head %}
-    {{ super() }}
+{{ super() }}
 {% endblock %}
 {% block content %}
-    <h1 class="text-center">Check if your account was compromised</h1>
-    <form method="post">
-      <div class="col-md-12 text-center input--url">
-        <label for="user_id" class="col-md-12">Twitter user:</label>
-        <input type="text" name="user_id" id="user_id" value="satyanadella" size="50" class="transparent col-md-12 text-center" autocomplete="off" />
-      </div>
-      <div class="col-md-12 text-center">
-        <button type="submit" value="Submit" class="btn btn-success">Check</button>
-        <button type="reset" value="Reset" class="btn btn-default">Reset</button>
-      </div>
+<h1 class="text-center">Check if your account was compromised</h1>
+<div class="form-container">
+
+    <form action="{{ url_for('check_post', demo=demo) }}" method="post">
+        {% if error %}
+        <div class="col-md-12 text-center error-container">
+            An error occurred! <br />
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="col-md-12 text-center">
+            <label for="user_id" class="col-md-12">Twitter user:</label>
+            <input type="text" name="user_id" id="user_id" value="{{ user_id }}" size="50" class="transparent col-md-12 text-center" autocomplete="off" />
+        </div>
+        <div class="col-md-12 text-center button-container">
+            <button type="submit" value="Submit" class="btn btn-success">Check</button>
+            <button type="reset" value="Reset" class="btn btn-default">Reset</button>
+        </div>
     </form>
+</div>
 {% endblock %}

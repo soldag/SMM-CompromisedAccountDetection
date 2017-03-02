@@ -18,10 +18,16 @@ class TwitterProvider:
         raise ValueError('Either user_id or dataset_path has to be provided')
 
     def _get_api_status_updates(self, user_id, limit):
-        client = self._get_twitter_client()
-        tweets = tweepy.Cursor(client.user_timeline, id=user_id).items(limit)
-        status_updates = [self._parse_tweet(tweet) for tweet in tweets
-                          if not hasattr(tweet, 'retweeted_status')]
+        try:
+            client = self._get_twitter_client()
+            tweets = tweepy.Cursor(client.user_timeline, id=user_id).items(limit)
+            status_updates = [self._parse_tweet(tweet) for tweet in tweets
+                              if not hasattr(tweet, 'retweeted_status')]
+        except tweepy.TweepError as error:
+            if error.response.status_code == 404:
+                raise ValueError('User "%s" does not exist.' % user_id)
+
+            raise error
 
         return status_updates
 

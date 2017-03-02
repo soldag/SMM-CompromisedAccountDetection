@@ -17,9 +17,19 @@ body {
 .transparent:focus{
     outline: none;
 }
-.input--url {
-    margin-top: 13rem;
-    margin-bottom: 4rem;
+
+.form-container {
+    margin-top: 10rem;
+}
+
+.button-container {
+    margin-top: 4rem;
+}
+
+.error-container {
+    color: #d9534f;
+    font-size: 18px;
+    margin-bottom: 2rem;
 }
 
 .tweet-container {

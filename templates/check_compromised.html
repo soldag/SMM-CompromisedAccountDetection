@@ -34,7 +34,7 @@
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success" {% if not can_refine %}disabled{% endif %}>Refine</button>
-            <a class="btn btn-default" href="/check{% if demo_mode %}?demo=1{% endif %}">Back</a>
+            <a class="btn btn-default" href="{{ url_for('index', demo=demo) }}">Back</a>
         </div>
     </form>
 {% endblock %}

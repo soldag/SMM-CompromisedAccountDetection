@@ -20,7 +20,7 @@ docker run -d -p 5000:5000 smm-compromised-account-detection
 The app is available at `http://localhost:5000`.
 
 #### Windows
-Execute the following command to determine the IP of the `DOCKER_VM_IP`.
+Execute the following command to determine the IP of the Docker VM (`DOCKER_VM_IP`).
 ```bash
 docker-machine ip default  # the machine could be named different from 'default' !
 ```
@@ -61,7 +61,7 @@ The app can be configured using the following command line arguments:
 | -H   | --host  | The hostname of the app.                                                                                                 | 0.0.0.0         |
 | -P   | --port | The port for the app.                                                                                                    | 5000            |
 | -t   | --data-type  | Type of the status update dataset. Possible values are `fth`, `mp` and `twitter`. | twitter         |
-| -p   | --data-path | Path of the status update dataset                                                                | data/tweets.csv |
+| -p   | --data-path | Path of the status update dataset.                                                                | data/tweets.csv |
 | -c   | --classifier   | The classifier to use. Possible values are `decision_tree`, `one_class_svm`, `isolation_forest` and `perceptron`. | decision_tree   |
 
 

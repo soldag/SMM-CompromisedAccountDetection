@@ -1,5 +1,4 @@
 import math
-import itertools
 from random import sample
 
 

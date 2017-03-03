@@ -17,7 +17,7 @@ Determines the best suited hyper-parameter combinations for a certain classifier
 
 | Flag | Name           | Description                                                                                                            | Default |
 |------|----------------|------------------------------------------------------------------------------------------------------------------------|---------|
-| -s   | --data-source  | The data source for tweets that should be used for classifier analysis. Possible values are `fth`, `mp` and `twitter`. |         |
+| -s   | --data-source  | The data source that should be used for classifier analysis. Possible values are `fth`, `mp` and `twitter`. |         |
 | -p   | --dataset-path | The path of the dataset that should be used for classifier analysis.                                                   |         |
 | -c   | --classifier   | The classifier to be analyzed. Possible values are `decision_tree` and `perceptron`.                                   |         |
 
@@ -28,7 +28,7 @@ Evaluates the anomaly detection approach using cross-validation.
 
 | Flag | Name                | Description                                                                                                              | Default         |
 |------|---------------------|--------------------------------------------------------------------------------------------------------------------------|-----------------|
-| -s   | --data-source       | The data source for tweets that should be used for cross-validation. Possible values are `fth`, `mp` and `twitter`.      |                 |
+| -s   | --data-source       | The data source that should be used for cross-validation. Possible values are `fth`, `mp` and `twitter`.      |                 |
 | -p   | --dataset-path      | The path of the dataset that should be used for cross-validation.                                                        |                 |
 | -c   | --classifier        | The classifier to be trained. Possible values are `decision_tree`, `one_class_svm`, `isolation_forest` and `perceptron`. |                 |
 |      | --evaluation-rounds | Number of rounds the evaluation is executed. Reduces the variation caused by sampling.                                   | 10              |

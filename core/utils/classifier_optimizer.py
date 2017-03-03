@@ -63,7 +63,7 @@ CLASSIFIER_MAPPING = {
         },
         'grid': {
             'penalty': [None, 'l2', 'l1', 'elasticnet'],
-            'alpha': [0.0001, 0.0003, 0.0004, 0.0005, 0.0006, 0.0007, 0.0008, 0.0009],
+            'alpha': [0.0001, 0.0003, 0.0005, 0.0007, 0.0008, 0.0009],
             'fit_intercept': [True, False],
             'n_iter': [5, 10, 20, 30],
             'shuffle': [True, False],

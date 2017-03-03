@@ -35,7 +35,7 @@ def tune_cli(argv):
     # Create argument parser
     parser = argparse.ArgumentParser(description="This application determines the best suited hyper-parameter combinations for a certain classifier based on a given data set.")
     parser.add_argument("--data-source", "-s",
-                        help="The data source for tweets that should be used for classifier analysis. Possible values are 'fth', 'mp' and 'twitter'.")
+                        help="The data source that should be used for classifier analysis. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
                         help="The path of the dataset that should be used for classifier analysis.")
     parser.add_argument("--classifier", "-c",
@@ -58,7 +58,7 @@ def evaluate_cli(argv):
     # Create argument parser
     parser = argparse.ArgumentParser(description="This application evaluates the anomaly detection approach.")
     parser.add_argument("--data-source", "-s",
-                        help="The data source for tweets that should be used for cross-validation. Possible values are 'fth', 'mp' and 'twitter'.")
+                        help="The data source that should be used for cross-validation. Possible values are 'fth', 'mp' and 'twitter'.")
     parser.add_argument("--dataset-path", "-p",
                         help="The path of the dataset that should be used for cross-validation.")
     parser.add_argument("--classifier", "-c",
@@ -99,7 +99,7 @@ def evaluate_cli(argv):
             if len(ext_training_status_updates) > len(user_status_updates):
                 ext_training_status_updates = sample(ext_training_status_updates, len(user_status_updates))
 
-            # Add some tweets from other users
+            # Add some status updates from other users
             safe_user_status_updates = user_status_updates[:START_BATCH_SIZE]
             mixed_user_status_updates, ext_testing_status_updates = random_insert_seq(user_status_updates[START_BATCH_SIZE:],
                                                                                       ext_testing_status_updates)

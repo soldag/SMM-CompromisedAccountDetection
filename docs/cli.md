@@ -32,7 +32,7 @@ Evaluates the anomaly detection approach using cross-validation.
 | -p   | --dataset-path      | The path of the dataset that should be used for cross-validation.                                                        |                 |
 | -c   | --classifier        | The classifier to be trained. Possible values are `decision_tree`, `one_class_svm`, `isolation_forest` and `perceptron`. |                 |
 |      | --evaluation-rounds | Number of rounds the evaluation is executed. Reduces the variation caused by sampling.                                   | 10              |
-|      | --no-scaling        | Disables feature scaling.                                                                                                | True            |
+|      | --no-scaling        | Disables feature scaling.                                                                                                |                 |
 | -o   | --output-path       | The path of the file the results should be written to.                                                                   | evaluation.xlsx | 
 
 ## Examples

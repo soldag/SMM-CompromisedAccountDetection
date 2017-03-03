@@ -16,7 +16,7 @@ docker build -t smm-compromised-account-detection .
 docker run -d -p 5000:5000 smm-compromised-account-detection
 ```
 
-#### Mac
+#### Mac & Linux
 The app is available at `http://localhost:5000`.
 
 #### Windows

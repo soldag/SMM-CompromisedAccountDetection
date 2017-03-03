@@ -9,7 +9,7 @@ The app can be run using docker. The following steps are necessary:
 2. Clone the repository.
 3. Create the twitter API credentials file as described [below](#twitter-api-credentials).
 4. Copy the twitter dataset into `data/tweets.csv`. It can be created using the CLI interface (see [CLI Reference](docs/cli.md)).
-5. Go into the directory, build the image and run it.
+5. Go into the project directory, build the image and run it.
 ```bash
 cd /SMM-CompromisedAccountDetection
 docker build -t smm-compromised-account-detection .
@@ -50,7 +50,7 @@ For demo purposes the HTTP query parameter `demo=1` can be set to randomly inser
 The app needs a dataset containing tweets that can be used as negative samples and for demo mode. It can be created by using our crawling command-line tool (see [CLI Reference](docs/cli.md)). 
 
 ```
-# Starts the web app with default parameters.
+# Starts the web app with default parameters
 python app.py
 ```
 
@@ -66,4 +66,4 @@ The app can be configured using the following command line arguments:
 
 
 ### Command Line Interface
-The app provides a command line interface for crawling a dataset, tuning hyperparameters and evaluation. Have a look at the [CLI Reference](docs/cli.md).
+The app provides a command line interface for crawling a dataset, tuning hyperparameters, and evaluation. Have a look at the [CLI Reference](docs/cli.md).

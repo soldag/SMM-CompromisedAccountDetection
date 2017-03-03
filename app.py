@@ -20,6 +20,10 @@ TWEET_LIMIT = 1000
 SHOWN_TWEETS_LIMIT = 10
 
 app = Flask(__name__)
+app.config['data_source'] = DEFAULT_DATA_SOURCE
+app.config['dataset_path'] = DEFAULT_DATA_PATH
+app.config['classifier'] = DEFAULT_CLASSIFIER
+
 session_cache = ExpiringDict(10, 3600)
 
 
